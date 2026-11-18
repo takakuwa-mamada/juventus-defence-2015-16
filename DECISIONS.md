@@ -208,3 +208,50 @@ Choices made by the AI assistant, listed here for my review:
 **Choice:** On every chart.
 
 **Reason:** The user agreement asks for the logo on published analysis (1.4), and a chart can be shared on its own. The logo file comes from the same fixed commit of the open-data repository as the data. Like the data, it is downloaded by `src/01_download.py` and not committed.
+
+## D23 · 2026-11-18 · How the numbers get into the README and the one-page summaries (M5)
+
+**Options**
+- A. The text is written by hand, with a placeholder wherever a number goes. `src/05_report.py` fills in every number from the results tables and writes the README and the summaries.
+- B. The README is written by hand, with the numbers copied from the tables, and a test compares them.
+
+**Choice:** A
+
+**Reason:** No number in the text is typed by hand, so a rerun can never leave an old number behind. Like the chart script, `05_report.py` stops if a result is no longer the one that the text was written for. The cost: the README is changed in its template, not in `README.md` itself.
+
+Choices made by the AI assistant, listed here for my review:
+- The templates are in `templates/`. `05_report.py` writes `README.md`, `docs/summary_en.md` and `docs/summary_ja.md` from them.
+- `05_report.py` also stops if a template contains a typed number: a digit outside a placeholder, except in a few names and units that are not results (the season "2015/16", the repository name, "per 100 possessions").
+- The one-page summaries name me as the author. My real name is already public in the commits (D10).
+- The README shows StatsBomb's logo from the same fixed commit of the open-data repository, because the logo file is not committed (D22).
+
+## D24 · 2026-11-18 · The implication
+
+**Options:** a lesson about football and a lesson for data work (two sentences) · the football lesson only · the data-work lesson only
+
+**Choice:** Both sentences:
+
+> Judge a defence by the quality of the chances it allows, not only by how many shots or goals it concedes.
+>
+> Before explaining a headline number, break it into its drivers: Juventus's record came from very few shots and the weakest chances in the league, and luck is not needed to explain it.
+
+**Reason:** The first sentence is for readers who know football. The second shows a habit that any data work needs: before explaining a headline number, break it into what drives it.
+
+**Changed on the same day, before anything was published (my choice, after the AI assistant pointed out the problem).** The first wording of the second sentence was "Juventus's record came from the weakest chances, not the fewest shots". It could be read as if the number of shots did not matter, but Juventus allowed the 2nd fewest shots, only 2 more than Napoli in the whole season. The new wording names both drivers. The results and the verdicts did not change.
+
+## D25 · 2026-11-18 · How the one-page summaries become PDFs
+
+**Options**
+- A. Add Python-Markdown (a widely used library) to turn each summary into a web page, and print the page with Microsoft Edge or Google Chrome, without opening a window.
+- B. No new library: write the text of the summaries in HTML.
+- C. No PDF: only the summaries on GitHub, printed by hand when needed.
+
+**Choice:** A
+
+**Reason:** The summaries stay easy to edit as Markdown, and `run_all.py` makes the PDFs like every other output. The version of the library is fixed in `requirements.txt`.
+
+Choices made by the AI assistant, listed here for my review:
+- `src/06_pdf.py` stops if a summary does not fit on one A4 page.
+- A PDF stores the time when it was printed. A new print is compared with the old PDF without those times, and the old file is kept if nothing else changed, so a rerun does not change the PDFs.
+- If neither browser is found, the step is skipped with a message. The Markdown summaries are still written.
+- Each print uses a new, empty browser profile, so my own browser (settings, history, sign-ins) is not touched.

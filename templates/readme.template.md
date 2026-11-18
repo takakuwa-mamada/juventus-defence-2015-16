@@ -1,0 +1,91 @@
+# Why did Juventus concede so few goals? Serie A 2015/16
+
+Juventus conceded only {{juve_goals_total}} goals in {{matches_per_team}} league matches in 2015/16, the fewest of the {{n_teams}} teams ({{second_goals_team}} were next, with {{second_goals_total}}). This project asks why, with StatsBomb's free event data for all {{n_matches}} matches of the season.
+
+**Short answer.** Juventus allowed the weakest chances in the league, and almost the fewest shots. Their goals conceded are within what chance can explain, so luck is not needed to explain their record.
+
+**One-page summary:** [English](docs/summary_en.md) ([PDF](docs/summary_en.pdf)) · [Japanese](docs/summary_ja.md) ([PDF](docs/summary_ja.pdf))
+
+![Juventus allowed the weakest chances, but not the fewest](results/charts/1_chances.png)
+
+## Question and hypothesis
+
+- **Question:** Why did Juventus concede so few goals?
+- **Hypothesis**, written before any analysis: Juventus allowed the fewest and the weakest chances in the league, and their goals conceded were about what xG predicted. So the main reason was how they defended, not their goalkeeper or luck.
+
+> **xG (expected goals):** for each shot, the chance that it becomes a goal, from StatsBomb's model (based on many similar past shots). A team's xG conceded is the sum over all the shots it faced.
+
+The rules for judging each part of the hypothesis were fixed and committed before any result was calculated: see [the rules in PLAN.md](PLAN.md#6-analysis-rules-fixed-on-2026-11-18-before-any-result-was-calculated) and commit [`ada634d`](https://github.com/takakuwa-mamada/juventus-defence-2015-16/commit/ada634db4f19c5ba55dfc3bf216a6a9ed6b2d269). All {{n_teams}} teams are measured in the same way, from the shots of their opponents. Penalties are left out of the main numbers, and own goals are counted separately.
+
+## What I found
+
+**The weakest chances: supported.** The average shot against Juventus had a {{juve_xg_per_shot_pct}} chance of going in (its xG), the lowest of the {{n_teams}} teams. Together with the small number of shots, this gave Juventus the lowest xG conceded per match: {{juve_xg_per_match}}.
+
+**The fewest chances: not supported, but close.** Juventus faced {{juve_shots_per_match}} shots per match, the {{juve_shots_rank}} fewest. {{fewest_shots_team}} faced {{shots_gap_text}} fewer in the whole season ({{fewest_shots_per_match}} per match), but more dangerous ones: a {{fewest_shots_xg_per_shot_pct}} chance per shot. The rule asked for first place, so this part of the hypothesis is not supported.
+
+**Goals about what xG predicted: consistent with the data.** Juventus conceded {{juve_goals_from_shots}} goals from non-penalty shots, while the chances they allowed were worth {{juve_xg}} xG: {{goals_below_xg}} goals fewer than expected ({{bigger_gap_count}} had a bigger gap). To see whether a gap like this could be chance, the season was replayed {{n_replays}} times: in each replay, every shot that Juventus faced became a goal with a probability equal to its xG. {{replay_share}} of the replays ended with {{juve_goals_from_shots}} goals or fewer. Under {{far_fewer_pct}} would have meant "far fewer goals than xG", so the gap is within what chance can explain. With penalties included, the result is the same ({{replay_share_with_penalties}} of the replays).
+
+**Possession: it explains part of the low numbers.** A team that keeps the ball gives its opponents fewer chances to attack. So the shots and xG conceded were also counted per 100 opponent possessions (a possession is one spell of play by one team, however short). On this scale, Juventus is {{juve_shots_per_100_rank}} on shots and {{juve_xg_per_100_rank}} on xG. The rule fixed in advance says that possession explains part of the low numbers unless Juventus is first on both.
+
+All the results: [`results/hypothesis_tests.csv`](results/hypothesis_tests.csv) (the tests) and [`results/team_metrics.csv`](results/team_metrics.csv) (every measure for every team).
+
+## The other two charts
+
+![Goals minus xG for every team](results/charts/2_goals_vs_xg.png)
+
+![The replays of Juventus's season](results/charts/3_replays.png)
+
+## So what
+
+> Judge a defence by the quality of the chances it allows, not only by how many shots or goals it concedes.
+>
+> Before explaining a headline number, break it into its drivers: Juventus's record came from very few shots and the weakest chances in the league, and luck is not needed to explain it.
+
+## How the data was checked
+
+Before any analysis, the data passed all {{n_checks}} checks below ([`results/data_checks.csv`](results/data_checks.csv)). They check StatsBomb's data against itself (for example, the goals in the events add up to the final score of every match) and against the official league table, typed in from two public sources ([`reference/`](reference/)). If a check fails, `run_all.py` stops before the analysis.
+
+{{data_checks_table}}
+
+## Limitations
+
+- **One season, one data provider.** xG comes from StatsBomb's model, not mine.
+- **"Within chance" is not proof of no luck.** One season is short: the replay would have called the goals "far fewer than xG" only if Juventus had conceded {{far_fewer_max_goals}} or fewer.
+- **The goalkeeper's part and luck cannot be fully separated.** xG measures the chance at the moment of the shot, not how well the shot was struck.
+- **Possessions are counted, not timed.** Every possession counts once, however short. This is not the share of time on the ball.
+- **Event data only.** The data shows what happened on the ball, not where the other players were.
+
+## How to rerun
+
+You need Python `3.12`. The data download is about {{download_gb}}. In Windows PowerShell, from the project folder:
+
+```powershell
+py -3.12 -m venv .venv
+.venv\Scripts\python -m pip install -r requirements.txt
+.venv\Scripts\python run_all.py
+```
+
+`run_all.py` runs the steps in [`src/`](src/) in order: it downloads {{n_files}} files from one fixed version (commit) of StatsBomb's open data, checks them, calculates the measures, draws the charts, writes this README and the one-page summaries, and prints the summaries to PDF. The last step needs Microsoft Edge or Google Chrome; without them, it is skipped. A second run gives exactly the same tables, charts and text, byte for byte, and leaves the PDFs as they are. The tests of the key calculations: `.venv\Scripts\python -m pytest`.
+
+## How this was built
+
+The code was written with an AI coding assistant (Claude Code). The question, hypothesis, data checks, chart choices and interpretation are mine. Every decision is logged in [DECISIONS.md](DECISIONS.md), with the options I considered and the reason for my choice.
+
+## Files
+
+| Path | What it is |
+|---|---|
+| [`run_all.py`](run_all.py) | runs every step, in order |
+| [`src/`](src/) | the steps: download, data checks, measures, charts, text, PDFs |
+| [`templates/`](templates/) | the text of this README and of the summaries, with a placeholder for every number |
+| [`results/`](results/) | the tables and charts written by the steps |
+| [`reference/`](reference/) | the official final table, typed in from two public sources |
+| [`docs/`](docs/) | the one-page summaries (Markdown and PDF), and a summary of StatsBomb's terms |
+| [`tests/`](tests/) | tests of the key calculations |
+| [`PLAN.md`](PLAN.md), [`DECISIONS.md`](DECISIONS.md) | the plan, and every decision with its options and reason |
+
+## Data
+
+**Data: StatsBomb.** This project uses StatsBomb's free open data, under the StatsBomb Public Data User Agreement ([my summary of the terms](docs/statsbomb_terms.md)). The raw data is not in this repository: `run_all.py` downloads it.
+
+<img src="{{logo_url}}" alt="StatsBomb" width="240">

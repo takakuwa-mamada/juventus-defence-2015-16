@@ -22,24 +22,22 @@ Question → Hypothesis → Verification with data → Implication.
   2. How good the chances were: xG per shot conceded, and xG conceded per match, for all 20 teams.
   3. Goals conceded vs. xG conceded, with a replay of the season to see whether the gap could be chance.
   All the rules for judging the results are fixed **before** we look at the results (section 6).
-- **Implication:** written after the results.
-  - If the hypothesis holds: judge a defence by the chances it allows, not only by its goals conceded.
-  - If it fails: even a great number can hide luck, so check what drives it.
+- **Implication** (written after the results, D24): Judge a defence by the quality of the chances it allows, not only by how many shots or goals it concedes. Before explaining a headline number, break it into its drivers: Juventus's record came from very few shots and the weakest chances in the league, and luck is not needed to explain it.
 
 > **xG (expected goals):** for each shot, the probability that it becomes a goal, from StatsBomb's model (based on many similar past shots). A team's **xG conceded** is the sum over all the shots it faced.
 
 ## 3. Scope
 
-- **In:** Serie A 2015/16 (all 20 teams, for comparison); StatsBomb open event data; Python (pandas, numpy, matplotlib, and pytest for a few tests).
+- **In:** Serie A 2015/16 (all 20 teams, for comparison); StatsBomb open event data; Python (pandas, numpy, matplotlib, pytest for a few tests, and Python-Markdown for the PDF summaries).
 - **Out, for now:** other seasons and leagues; player-position ("360") data, which this season does not have; machine learning; a web app (maybe in January, only if there is time and I agree).
 
 ## 4. Deliverables
 
-- Numbered scripts in `src/` (`01_download`, `02_checks`, `03_metrics`, `04_charts`), all run by **one command** (`run_all.py`).
+- Numbered scripts in `src/` (`01_download`, `02_checks`, `03_metrics`, `04_charts`, `05_report`, `06_pdf`), all run by **one command** (`run_all.py`).
 - `results/`: a results table written by the scripts. **Every number in the README and in the one-page summary comes from this table.** No number is typed by hand.
 - 3 charts: one message each, the title states the finding, labelled axes with units, readable on a phone. Chart text is in English; the Japanese summary uses the same charts (proposal). Chosen in D21: (1) how many chances each team allowed and how good they were, (2) goals minus xG for all 20 teams, (3) the replays of Juventus's season. Each chart carries the StatsBomb logo (D22). Written to `results/charts/`.
-- `README.md` (English): the story, the charts, data checks, limitations, how to rerun, how this was built (AI note, see D7), and data credit to StatsBomb with their logo.
-- One-page summary in English and Japanese (Markdown, also exported as PDF).
+- `README.md` (English): the story, the charts, data checks, limitations, how to rerun, how this was built (AI note, see D7), and data credit to StatsBomb with their logo. Written by `src/05_report.py` from a template in `templates/`, with every number filled in from `results/` (D23).
+- One-page summary in English and Japanese (`docs/summary_en.md`, `docs/summary_ja.md`; Markdown, also exported as PDF). Written the same way as the README (D23), and printed to one A4 page each by `src/06_pdf.py` (D25).
 - Reproducible: `requirements.txt`, a fixed random seed, the original data files cached locally (**not** committed to git) with a fingerprint of each file, so anyone can check that they have the same data (D12).
 - A few small automatic tests for the key calculations (D11).
 
@@ -88,7 +86,7 @@ Time budget: about 10 hours per week. Extra time is used to finish **earlier**, 
 | M2 | Data and checks | registration with StatsBomb first (by me, see `docs/statsbomb_terms.md`); data downloaded and cached locally; data checks script and its results | 2026-11-29 | done (2026-11-18): all checks passed, see `results/data_checks.csv` |
 | M3 | Metrics | O1–O4 decided first; shots, xG and goals − xG for all 20 teams | 2026-12-06 | done (2026-11-18): rules committed first (D20), then the results: `results/hypothesis_tests.csv` |
 | M4 | Charts and results table → **MVP** | 3 charts and the results table, from one command | 2026-12-13 | done (2026-11-18): `results/charts/` and `results/*.csv`, all from `run_all.py` |
-| M5 | Write-up and publish | README; one-page summary (EN/JA); make the GitHub repository public **only after my explicit OK** (it is private until then, D16) | about 2026-12-20 | not started |
+| M5 | Write-up and publish | README; one-page summary (EN/JA); make the GitHub repository public **only after my explicit OK** (it is private until then, D16) | about 2026-12-20 | in progress (2026-11-18): README, summaries and PDFs drafted (D23–D25), waiting for my review. Then the repository goes public, only after my OK |
 | M6 | Polish and talk track | 1-minute and 5-minute explanations; likely questions and answers | 2027-01-31 | not started |
 | — | February 2027 | no new work (freeze) | — | — |
 

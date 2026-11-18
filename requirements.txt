@@ -7,3 +7,5 @@ numpy==2.5.5
 matplotlib==3.11.2
 # For the tests of the key calculations (D11)
 pytest==9.2.0
+# Turns the one-page summaries into web pages, to print them to PDF (D25)
+markdown==3.11.3

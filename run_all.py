@@ -16,6 +16,8 @@ STEPS = [
     "src/02_checks.py",  # the data checks -> results/data_checks.csv
     "src/03_metrics.py",  # the measures and the hypothesis tests -> results/team_metrics.csv and 2 more
     "src/04_charts.py",  # the three charts -> results/charts/
+    "src/05_report.py",  # the text, with every number from results/ -> README.md and docs/summary_*.md
+    "src/06_pdf.py",  # the one-page summaries printed to PDF -> docs/summary_*.pdf (needs Edge or Chrome)
 ]
 
 for step in STEPS:

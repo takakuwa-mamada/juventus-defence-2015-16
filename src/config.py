@@ -2,6 +2,7 @@
 
 The other scripts import their settings from here, so a change is made in one place.
 """
+import urllib.parse
 from pathlib import Path
 
 # Project folder (this file is in <project>/src/).
@@ -14,6 +15,10 @@ RAW_DIR = DATA_DIR / "raw"
 # Small tables and the charts written by the scripts. These are in git.
 RESULTS_DIR = ROOT / "results"
 CHARTS_DIR = RESULTS_DIR / "charts"
+# The text of the README and of the one-page summaries, with a placeholder for every number (D23),
+# and the folder where the summaries are written.
+TEMPLATES_DIR = ROOT / "templates"
+DOCS_DIR = ROOT / "docs"
 # Final league tables typed in from public sources, for data checks 5 and 7 (D14).
 REFERENCE_DIR = ROOT / "reference"
 OFFICIAL_TABLE = REFERENCE_DIR / "final_table_legaseriea.csv"
@@ -29,6 +34,8 @@ BASE_URL = f"{REPO_URL}/data"
 # analysis, so every chart shows it (D22). Like the data, it is downloaded, not committed.
 LOGO_REL_PATH = "img/SB - Icon Lockup - Colour positive.png"
 LOGO_FILE = DATA_DIR / LOGO_REL_PATH
+# The README cannot show a file that is not committed, so it shows the logo from the same commit online.
+LOGO_URL = f"{REPO_URL}/{urllib.parse.quote(LOGO_REL_PATH)}"
 
 # The season is found by name in competitions.json. Its ids are never typed in.
 COMPETITION_NAME = "Serie A"
