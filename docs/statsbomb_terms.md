@@ -12,7 +12,7 @@ This is my own summary for planning, not legal advice. The original documents ar
 | Do not distribute, reproduce, sell or give the data to anyone else (agreement 1.2.1 and 7). | Raw data is never committed (`data/` is in `.gitignore`). Only small summary tables (one row per team) are published. Event-level extracts stay on my computer. |
 | Do not use the data, or analysis made from it, for commercial purposes (1.2.2). | Nothing is sold. There is no paid product or service. |
 | Do not publish anything that might be defamatory or damaging to a person or an organisation (1.2.4). | Neutral, evidence-based wording about players and clubs, for example "fewer goals than xG predicted", not judgements about people. |
-| Credit StatsBomb with its logo on any published analysis (1.4), and state the data source as StatsBomb (README). | "Data: StatsBomb" and the StatsBomb logo in the README and in the one-page summary. Proposal for M4: also on each chart, because a chart can be shared on its own. |
-| Register name and email at statsbomb.com/resource-centre before using the data (agreement, opening part and 2.2). | Not done yet. I will register before the full download in M2. |
+| Credit StatsBomb with its logo on any published analysis (1.4), and state the data source as StatsBomb (README). | "Data: StatsBomb" and the StatsBomb logo on every chart (D22), in the README and in the one-page summary. The logo file is downloaded from the open-data repository, not committed. |
+| Register name and email at statsbomb.com/resource-centre before using the data (agreement, opening part and 2.2). | Done by me on 2026-11-18, before the full download (M2). |
 | The data is provided "as is", with no promise of accuracy or completeness (3). | One more reason for the data checks (PLAN.md, section 5). |
 | StatsBomb can stop the service at any time (2.1). | Limitation: a rerun needs the data to still be available on GitHub. |

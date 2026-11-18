@@ -4,7 +4,6 @@
 pandas==3.1.1
 # Used directly by the season replay (D17)
 numpy==2.5.5
-mplsoccer==1.8.1
 matplotlib==3.11.2
 # For the tests of the key calculations (D11)
 pytest==9.2.0

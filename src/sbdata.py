@@ -9,6 +9,7 @@ import json
 import shutil
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -21,7 +22,7 @@ from config import BASE_URL, RAW_DIR
 RETRY_WAITS = (5, 15)
 
 
-def download_file(rel_path: str, raw_dir: Path = RAW_DIR) -> bool:
+def download_file(rel_path: str, raw_dir: Path = RAW_DIR, base_url: str = BASE_URL) -> bool:
     """Download one file from the fixed open-data commit, unless it is already here.
 
     Returns True if the file was downloaded now, False if it was already on disk.
@@ -33,7 +34,8 @@ def download_file(rel_path: str, raw_dir: Path = RAW_DIR) -> bool:
         return False
     target.parent.mkdir(parents=True, exist_ok=True)
     part = target.with_name(target.name + ".part")
-    url = f"{BASE_URL}/{rel_path}"
+    # quote() writes spaces in a file name as %20, which a web address needs.
+    url = f"{base_url}/{urllib.parse.quote(rel_path)}"
     for attempt in range(len(RETRY_WAITS) + 1):
         last_try = attempt == len(RETRY_WAITS)
         try:

@@ -7,10 +7,13 @@ from pathlib import Path
 # Project folder (this file is in <project>/src/).
 ROOT = Path(__file__).resolve().parents[1]
 
-# Raw StatsBomb files, saved unchanged. Not in git (see .gitignore).
-RAW_DIR = ROOT / "data" / "raw"
-# Small tables written by the scripts. These are in git.
+# Downloaded files. Not in git (see .gitignore).
+DATA_DIR = ROOT / "data"
+# Raw StatsBomb files, saved unchanged.
+RAW_DIR = DATA_DIR / "raw"
+# Small tables and the charts written by the scripts. These are in git.
 RESULTS_DIR = ROOT / "results"
+CHARTS_DIR = RESULTS_DIR / "charts"
 # Final league tables typed in from public sources, for data checks 5 and 7 (D14).
 REFERENCE_DIR = ROOT / "reference"
 OFFICIAL_TABLE = REFERENCE_DIR / "final_table_legaseriea.csv"
@@ -20,7 +23,12 @@ SECOND_TABLE = REFERENCE_DIR / "final_table_rsssf.csv"
 # Downloading from one fixed commit (not from "master") means that a rerun
 # gets exactly the same files, even if StatsBomb changes the data later.
 OPEN_DATA_COMMIT = "4b73468fc5b0f1950f9f66fada70ad3a4f9327cb"
-BASE_URL = f"https://raw.githubusercontent.com/statsbomb/open-data/{OPEN_DATA_COMMIT}/data"
+REPO_URL = f"https://raw.githubusercontent.com/statsbomb/open-data/{OPEN_DATA_COMMIT}"
+BASE_URL = f"{REPO_URL}/data"
+# StatsBomb's logo, from the same commit. The user agreement asks for it on published
+# analysis, so every chart shows it (D22). Like the data, it is downloaded, not committed.
+LOGO_REL_PATH = "img/SB - Icon Lockup - Colour positive.png"
+LOGO_FILE = DATA_DIR / LOGO_REL_PATH
 
 # The season is found by name in competitions.json. Its ids are never typed in.
 COMPETITION_NAME = "Serie A"

@@ -30,14 +30,14 @@ Question → Hypothesis → Verification with data → Implication.
 
 ## 3. Scope
 
-- **In:** Serie A 2015/16 (all 20 teams, for comparison); StatsBomb open event data; Python (pandas, mplsoccer, matplotlib, and pytest for a few tests).
+- **In:** Serie A 2015/16 (all 20 teams, for comparison); StatsBomb open event data; Python (pandas, numpy, matplotlib, and pytest for a few tests).
 - **Out, for now:** other seasons and leagues; player-position ("360") data, which this season does not have; machine learning; a web app (maybe in January, only if there is time and I agree).
 
 ## 4. Deliverables
 
 - Numbered scripts in `src/` (`01_download`, `02_checks`, `03_metrics`, `04_charts`), all run by **one command** (`run_all.py`).
 - `results/`: a results table written by the scripts. **Every number in the README and in the one-page summary comes from this table.** No number is typed by hand.
-- 3 charts: one message each, the title states the finding, labelled axes with units, readable on a phone. Chart text is in English; the Japanese summary uses the same charts (proposal).
+- 3 charts: one message each, the title states the finding, labelled axes with units, readable on a phone. Chart text is in English; the Japanese summary uses the same charts (proposal). Chosen in D21: (1) how many chances each team allowed and how good they were, (2) goals minus xG for all 20 teams, (3) the replays of Juventus's season. Each chart carries the StatsBomb logo (D22). Written to `results/charts/`.
 - `README.md` (English): the story, the charts, data checks, limitations, how to rerun, how this was built (AI note, see D7), and data credit to StatsBomb with their logo.
 - One-page summary in English and Japanese (Markdown, also exported as PDF).
 - Reproducible: `requirements.txt`, a fixed random seed, the original data files cached locally (**not** committed to git) with a fingerprint of each file, so anyone can check that they have the same data (D12).
@@ -87,7 +87,7 @@ Time budget: about 10 hours per week. Extra time is used to finish **earlier**, 
 | M1 | Setup | local git repo, virtual environment, `requirements.txt`, `.gitignore`; git name and email for public commits; StatsBomb user agreement read and its requests listed | 2026-11-22 | done (2026-11-18) |
 | M2 | Data and checks | registration with StatsBomb first (by me, see `docs/statsbomb_terms.md`); data downloaded and cached locally; data checks script and its results | 2026-11-29 | done (2026-11-18): all checks passed, see `results/data_checks.csv` |
 | M3 | Metrics | O1–O4 decided first; shots, xG and goals − xG for all 20 teams | 2026-12-06 | done (2026-11-18): rules committed first (D20), then the results: `results/hypothesis_tests.csv` |
-| M4 | Charts and results table → **MVP** | 3 charts and the results table, from one command | 2026-12-13 | not started |
+| M4 | Charts and results table → **MVP** | 3 charts and the results table, from one command | 2026-12-13 | done (2026-11-18): `results/charts/` and `results/*.csv`, all from `run_all.py` |
 | M5 | Write-up and publish | README; one-page summary (EN/JA); make the GitHub repository public **only after my explicit OK** (it is private until then, D16) | about 2026-12-20 | not started |
 | M6 | Polish and talk track | 1-minute and 5-minute explanations; likely questions and answers | 2027-01-31 | not started |
 | — | February 2027 | no new work (freeze) | — | — |

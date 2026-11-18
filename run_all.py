@@ -15,6 +15,7 @@ STEPS = [
     "src/01_download.py",  # download the raw StatsBomb files (files already here are skipped)
     "src/02_checks.py",  # the data checks -> results/data_checks.csv
     "src/03_metrics.py",  # the measures and the hypothesis tests -> results/team_metrics.csv and 2 more
+    "src/04_charts.py",  # the three charts -> results/charts/
 ]
 
 for step in STEPS:

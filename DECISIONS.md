@@ -183,3 +183,28 @@ Decided before any xG number was calculated for the analysis.
 - if a rule must change after the results are seen, show the result of the planned rule too, and log the reason here.
 
 **Reason:** The hypothesis says "the fewest" and "the weakest", so only first place matches its words. Fixing every rule before calculating means that the results cannot shape the rules.
+
+## D21 · 2026-11-18 · The three charts (M4)
+
+**Options**
+- A. (1) a scatter plot of shots conceded per match against xG per shot conceded; (2) goals minus xG for all 20 teams; (3) the 10,000 replays of Juventus's season
+- B. bar charts of (1) shots conceded per match and (2) xG per shot conceded; (3) the replays
+- C. as A, but (1) is a map of where the shots against Juventus and Napoli came from
+
+**Choice:** A
+
+**Reason:** Chart 1 shows both parts of "the fewest and weakest chances" in one picture. Chart 2 is the picture of all 20 teams promised in D17. C would add a claim that was not fixed before the results (where the shots came from), and more work.
+
+Choices made by the AI assistant, listed here for my review:
+- Juventus in orange and the other 19 teams in grey. The two colours were checked for colour-blind readers.
+- Each title states the finding, and every number on a chart is read from the results tables. If a result changes, the chart script stops instead of keeping a title that no longer fits.
+- The charts ignore personal matplotlib settings and use the font that comes with matplotlib, so they look the same on every computer.
+- mplsoccer (for drawing pitches) is not needed, so it was taken out of `requirements.txt`.
+
+## D22 · 2026-11-18 · StatsBomb logo on every chart
+
+**Options:** the logo and "Data: StatsBomb" on every chart · the logo only in the README and the one-page summary
+
+**Choice:** On every chart.
+
+**Reason:** The user agreement asks for the logo on published analysis (1.4), and a chart can be shared on its own. The logo file comes from the same fixed commit of the open-data repository as the data. Like the data, it is downloaded by `src/01_download.py` and not committed.
