@@ -32,8 +32,9 @@ INK_MUTED = "#898781"  # the data credit
 GRID = "#e1e0d9"
 AXIS = "#c3c2b7"
 
-# Sizes. Every chart is 6 inches wide (1,200 pixels). A phone shows it about 340 pixels
-# wide, so the subtitle (14 points) appears about 11 pixels high: readable without zooming.
+# Sizes. Every chart is 6 inches wide (1,200 pixels). On a phone 375 pixels wide, GitHub shows it
+# 309 pixels wide (checked on 2026-11-18, D27). The subtitle (14 points) is then about 10 pixels high
+# and the smallest text (the footer, 10 points) about 7: small, but readable without zooming.
 WIDTH_IN = 6.0
 SIDE_IN = 0.3  # empty margin on the left and right
 TITLE_PT, SUBTITLE_PT, LABEL_PT, TICK_PT, FOOTER_PT = 18, 14, 13, 12, 10

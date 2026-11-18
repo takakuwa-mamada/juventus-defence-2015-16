@@ -279,3 +279,26 @@ Choices made by the AI assistant, listed here for my review:
 - Order: the 1-minute explanation first (it is needed in any interview), then the likely questions, then the 5-minute explanation and the job links, and last the practice interviews and the 10-second test.
 
 **Changed on the same day (my choice).** The AI assistant writes a first draft of each text, and I correct it. The AI assistant pointed out the risk: a text that is not in my own words can sound learned by heart. The practice interviews check that I can say the points in my own words, without reading.
+
+## D27 · 2026-11-18 · Charts on a phone, and the rules of the 10-second test (M6)
+
+**What was checked.** The public pages were opened 375 pixels wide, like a small phone. In the README, GitHub shows each chart 309 pixels wide, so the text of a chart is 7 to 13 pixels high (the README's own text is 16): small, but readable without zooming. This is a little smaller than `src/04_charts.py` expected (about 340 pixels). In the one-page summaries, the two charts were side by side, each 151 pixels wide, with text of 3.5 to 6.3 pixels: not readable without zooming.
+
+**Options**
+- README charts: keep them as they are · make the text larger and draw the charts again.
+- Summary charts: on GitHub, show them one below the other at full width, and keep them side by side in the PDF · keep them as they are (the PDF is the main form of the summary, and on GitHub a chart can be tapped to open it).
+
+**Choice:** Keep the README charts. Show the summary charts one below the other on GitHub, and keep them side by side in the PDF.
+
+**Reason:** Interviewers will mostly see the README on a computer or the summary on paper, and the README charts can be read on a phone. The summary charts could not be read on a phone at all, and the fix does not change the PDF: the new print is the same as the old one, except for the time it was printed.
+
+Choices made by the AI assistant, listed here for my review:
+- The summaries now show the charts as Markdown pictures. `src/06_pdf.py` makes them 49% wide when it prints, so the PDF did not change.
+- The comment in `src/04_charts.py` now gives the measured width (309 pixels) instead of the expected one. The charts did not change.
+
+**Rules of the 10-second test, fixed before the test (D26).** 1–2 people who do not work with data, have not seen the chart and can read simple English look at chart 1 for 10 seconds. Then, without looking, they say in a few words what it shows.
+- Pass: they say, in any words, that the shots Juventus allowed were the least likely to go in (the weakest chances).
+- Partly: they only say that Juventus stands out or defends well, without the quality of the shots.
+- Fail: they cannot say, or they read it wrongly (for example, "Juventus faced the fewest shots": they faced the 2nd fewest).
+
+If anyone does not pass, I decide whether to change the title or the axis names, and the change is logged here. The names of the people are not written down.

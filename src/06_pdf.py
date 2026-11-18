@@ -37,6 +37,8 @@ BROWSER_NAMES = ["msedge", "microsoft-edge", "google-chrome", "chrome", "chromiu
 PRINT_TIMES = re.compile(rb"/(CreationDate|ModDate) ?\([^)]*\)")
 
 # One A4 page. The text uses the same ink colours as the charts (04_charts.py).
+# The two charts of a summary are side by side here, so that the summary fits on one page. On GitHub
+# they are shown one below the other at full width, so that they can be read on a phone (D27).
 STYLE = """
 @page { size: A4; margin: 12mm 14mm; }
 html { font-size: 9.3pt; }
@@ -50,6 +52,7 @@ li { margin: 0 0 2pt; }
 em { color: #52514e; }
 a { color: inherit; text-decoration: none; }
 img { vertical-align: top; }
+img[src*="results/charts/"] { width: 49%; }
 """
 
 

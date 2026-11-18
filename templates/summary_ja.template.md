@@ -13,7 +13,7 @@
 - **失点は xG の予想どおり: データと矛盾しない。** PK を除くシュートからの失点 {{juve_goals_from_shots}} に対し、xG は {{juve_xg}}。シーズンを {{n_replays_ja}}回やり直すと、{{replay_share}} がこの失点以下で終わった。偶然で説明できる範囲。
 - **ボール保持が一部を説明。** 相手のボール保持 100 回あたりでは、シュート数が {{juve_shots_per_100_rank_n}} 位、xG が {{juve_xg_per_100_rank_n}} 位。
 
-<img src="../results/charts/1_chances.png" alt="各チームの被シュート数とチャンスの質" width="49%"> <img src="../results/charts/3_replays.png" alt="ユベントスのシーズンのやり直し" width="49%">
+![各チームの被シュート数とチャンスの質](../results/charts/1_chances.png) ![ユベントスのシーズンのやり直し](../results/charts/3_replays.png)
 
 **結論** 守備は、打たせたシュートや失点の数だけでなく、許したチャンスの質で測る。見出しの数字は要因に分けてから説明する: ユベントスの記録は、とても少ない被シュートと、リーグで最も弱いチャンスの両方から来ていて、運を持ち出さなくても説明できる。
 
