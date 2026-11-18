@@ -36,7 +36,7 @@ def main() -> int:
     competition_id, season_id = sbdata.find_season(competitions, COMPETITION_NAME, SEASON_NAME)
     matches = sbdata.matches_table(sbdata.read_json(f"matches/{competition_id}/{season_id}.json"))
     print(f"Reading the events of {len(matches)} matches...", flush=True)
-    events, n_events = sbdata.load_events(matches["match_id"].tolist())
+    events, n_events, _ = sbdata.load_events(matches["match_id"].tolist())  # possessions are not checked
     goals = checks.goals_per_match(matches, events)
     official = pd.read_csv(OFFICIAL_TABLE, encoding="utf-8")
     second = pd.read_csv(SECOND_TABLE, encoding="utf-8")

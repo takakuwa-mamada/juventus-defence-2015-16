@@ -125,13 +125,31 @@ def shot_and_own_goal_rows(events: list[dict], match_id: int) -> list[dict]:
     return rows
 
 
-def load_events(match_ids: list[int], raw_dir: Path = RAW_DIR) -> tuple[pd.DataFrame, dict[int, int]]:
-    """Read each match's events file, one at a time, and keep shots and own goals.
+def possession_rows(events: list[dict], match_id: int) -> list[dict]:
+    """Count each team's possessions in one match (for the possession check, D19).
 
-    Returns the kept rows and the number of events in each file. A missing file
-    counts as 0 events, so that data check 3 reports it as a failure.
+    StatsBomb numbers every possession (a sequence of play controlled by one team)
+    and names the team that has the ball. All events of a possession share its
+    number, so each (number, team) pair is counted once, however short it is.
     """
-    rows, n_events = [], {}
+    pairs = {(event["possession"], event["possession_team"]["name"]) for event in events}
+    teams = sorted({team for _, team in pairs})
+    return [
+        {"match_id": match_id, "team": team, "possessions": sum(1 for _, t in pairs if t == team)}
+        for team in teams
+    ]
+
+
+def load_events(
+    match_ids: list[int], raw_dir: Path = RAW_DIR
+) -> tuple[pd.DataFrame, dict[int, int], pd.DataFrame]:
+    """Read each match's events file, one at a time.
+
+    Returns three things: the shots and own goals; the number of events in each
+    file; and each team's possessions in each match. A missing file counts as
+    0 events, so that data check 3 reports it as a failure.
+    """
+    rows, n_events, possessions = [], {}, []
     for match_id in match_ids:
         rel_path = f"events/{match_id}.json"
         if not (raw_dir / rel_path).exists():
@@ -140,7 +158,12 @@ def load_events(match_ids: list[int], raw_dir: Path = RAW_DIR) -> tuple[pd.DataF
         events = read_json(rel_path, raw_dir)
         n_events[match_id] = len(events)
         rows.extend(shot_and_own_goal_rows(events, match_id))
-    return pd.DataFrame(rows, columns=EVENT_COLUMNS), n_events
+        possessions.extend(possession_rows(events, match_id))
+    return (
+        pd.DataFrame(rows, columns=EVENT_COLUMNS),
+        n_events,
+        pd.DataFrame(possessions, columns=["match_id", "team", "possessions"]),
+    )
 
 
 def write_manifest(raw_dir: Path, out_csv: Path) -> pd.DataFrame:

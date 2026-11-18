@@ -86,7 +86,7 @@ Time budget: about 10 hours per week. Extra time is used to finish **earlier**, 
 | M0 | Kickoff and plan | PLAN.md, DECISIONS.md | 2026-11-18 | done |
 | M1 | Setup | local git repo, virtual environment, `requirements.txt`, `.gitignore`; git name and email for public commits; StatsBomb user agreement read and its requests listed | 2026-11-22 | done (2026-11-18) |
 | M2 | Data and checks | registration with StatsBomb first (by me, see `docs/statsbomb_terms.md`); data downloaded and cached locally; data checks script and its results | 2026-11-29 | done (2026-11-18): all checks passed, see `results/data_checks.csv` |
-| M3 | Metrics | O1–O4 decided first; shots, xG and goals − xG for all 20 teams | 2026-12-06 | not started |
+| M3 | Metrics | O1–O4 decided first; shots, xG and goals − xG for all 20 teams | 2026-12-06 | done (2026-11-18): rules committed first (D20), then the results: `results/hypothesis_tests.csv` |
 | M4 | Charts and results table → **MVP** | 3 charts and the results table, from one command | 2026-12-13 | not started |
 | M5 | Write-up and publish | README; one-page summary (EN/JA); make the GitHub repository public **only after my explicit OK** (it is private until then, D16) | about 2026-12-20 | not started |
 | M6 | Polish and talk track | 1-minute and 5-minute explanations; likely questions and answers | 2027-01-31 | not started |
