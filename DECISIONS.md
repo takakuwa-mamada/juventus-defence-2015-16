@@ -257,3 +257,23 @@ Choices made by the AI assistant, listed here for my review:
 - A PDF stores the time when it was printed. A new print is compared with the old PDF without those times, and the old file is kept if nothing else changed, so a rerun does not change the PDFs.
 - If neither browser is found, the step is skipped with a message. The Markdown summaries are still written.
 - Each print uses a new, empty browser profile, so my own browser (settings, history, sign-ins) is not touched.
+
+## D26 · 2026-11-18 · Talk track and practice for interviews (M6)
+
+**Options**
+- A. The minimum: a 1-minute and a 5-minute explanation in Japanese, and about 15 likely questions with answers (about 5 hours).
+- B. A, plus a short link from the project to each kind of job I apply for, and the 1-minute explanation in English (about 8 hours).
+- C. B, plus 3 practice interviews with the AI assistant as the interviewer (2 in Japanese, 1 in English), and a 10-second test of chart 1 with 1–2 people who do not work with data (about 12 hours).
+
+Who writes first: the AI assistant writes an outline (the order of the points and the numbers to use), and I write the sentences in my own words · the AI assistant writes a full draft and I edit it · I write everything and the AI assistant only checks it.
+
+Deadline: 2026-12-13 · the 1-minute explanation and the main answers by 2026-12-06, the rest by 2027-01-31 · 2027-01-31 (the first plan).
+
+**Choice:** C. The AI assistant writes the outline, and I write the sentences. Deadline 2026-12-13.
+
+**Reason:** In an interview, what counts is whether I can say it in my own words, and only practice shows where I get stuck: for example, "Did you write the code yourself?" (the README says that an AI assistant wrote it, D7). Writing the sentences myself also shows what I do not understand yet. I need the talk track earlier than the first plan's date, and M5 finished about a month early, so the time is there now, before my other commitments in January and February. The 10-second test checks a goal in section 1 of PLAN.md (each chart can be understood in 10 seconds), which no real reader has tested yet. This adds to the first plan for M6, but it uses the time saved, and the deadline moves earlier, not later.
+
+Choices made by the AI assistant, listed here for my review:
+- The talk track is not in this repository. It names the companies I apply to, so it stays in a folder that git ignores.
+- The talk track uses only numbers that are also in the README, so a reader can check every number I say in an interview.
+- Order: the 1-minute explanation first (it is needed in any interview), then the likely questions, then the 5-minute explanation and the job links, and last the practice interviews and the 10-second test.
