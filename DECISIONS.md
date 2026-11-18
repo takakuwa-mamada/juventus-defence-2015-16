@@ -277,3 +277,5 @@ Choices made by the AI assistant, listed here for my review:
 - The talk track is not in this repository. It names the companies I apply to, so it stays in a folder that git ignores.
 - The talk track uses only numbers that are also in the README, so a reader can check every number I say in an interview.
 - Order: the 1-minute explanation first (it is needed in any interview), then the likely questions, then the 5-minute explanation and the job links, and last the practice interviews and the 10-second test.
+
+**Changed on the same day (my choice).** The AI assistant writes a first draft of each text, and I correct it. The AI assistant pointed out the risk: a text that is not in my own words can sound learned by heart. The practice interviews check that I can say the points in my own words, without reading.
