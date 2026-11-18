@@ -18,9 +18,10 @@ Question → Hypothesis → Verification with data → Implication.
 - **Hypothesis:** Juventus allowed the fewest and weakest chances in the league, and their goals conceded were about what xG predicted. So the main reason was how they defended, not their goalkeeper (Buffon) or luck.
 - **Verification:**
   0. Data checks (section 5), including: goals counted from the events match the final scores.
-  1. Shots conceded per match, for all 20 teams.
-  2. xG conceded per match, for all 20 teams.
-  3. Goals conceded vs. xG conceded. The rule for "far fewer goals than xG" is fixed **before** we look at the results (section 6, O1).
+  1. How many chances: shots conceded per match, for all 20 teams.
+  2. How good the chances were: xG per shot conceded, and xG conceded per match, for all 20 teams.
+  3. Goals conceded vs. xG conceded, with a replay of the season to see whether the gap could be chance.
+  All the rules for judging the results are fixed **before** we look at the results (section 6).
 - **Implication:** written after the results.
   - If the hypothesis holds: judge a defence by the chances it allows, not only by its goals conceded.
   - If it fails: even a great number can hide luck, so check what drives it.
@@ -54,14 +55,27 @@ Question → Hypothesis → Verification with data → Implication.
 
 If a check fails, we stop, find the reason and write it down in DECISIONS.md before moving on. No silent fixes.
 
-## 6. Open decisions (settle before M3, before looking at any goals-vs-xG result)
+## 6. Analysis rules (fixed on 2026-11-18, before any result was calculated)
 
-| # | Decision | Options | Recommendation |
-|---|---|---|---|
-| O1 | Rule for "far fewer goals than xG" | (i) only the rank of "goals − xG" among the 20 teams · (ii) replay the season 10,000 times, letting each shot score with probability = its xG; "far fewer" if fewer than 5% of the replays end with this many goals or fewer (fixed seed), plus the rank chart | (ii): it tells us whether the gap could be chance |
-| O2 | Possession (another explanation: a team that keeps the ball faces fewer shots) | add "shots conceded per opponent possession" · only mention it as a limitation | add it (about +2 h) |
-| O3 | Penalties | include them · leave them out of both goals and xG | leave them out in the main test, and show the result with penalties as a check |
-| O4 | Own goals (not shots, so no xG) | count them in goals conceded · leave them out when comparing with xG | leave them out of the comparison and report them separately |
+These rules were fixed before any shot, xG or goal number was calculated for the analysis, so the results cannot change them (D17–D20). If a rule turns out to be wrong after we see the results, we keep the planned version, show the new version next to it, and log the reason in DECISIONS.md.
+
+**What is compared.** All 20 teams, 38 matches each. "Conceded" means the shots, xG and goals of a team's opponents.
+- Penalties are left out of all the main numbers (shots, xG and goals): a penalty is a rare, very high-xG chance, so a few kicks could decide the result. The same numbers with penalties are shown as a check (D18).
+- Own goals are not shots and have no xG, so they are left out of the goals compared with xG and counted separately (D18).
+
+**Measures**, for every team:
+1. Shots conceded per match.
+2. xG per shot conceded: how good the average chance allowed was.
+3. xG conceded per match: the number and the quality of the chances together.
+4. Goals conceded vs. xG conceded, and goals minus xG.
+5. Shots and xG conceded per 100 opponent possessions. A possession is StatsBomb's sequence of play controlled by one team, and every possession counts once, however short (D19).
+
+**How each part of the hypothesis is judged.** Only Juventus is tested; the other 19 teams are the comparison.
+- "The fewest chances": Juventus is 1st (lowest) of the 20 teams in measure 1.
+- "The weakest chances": Juventus is 1st (lowest) of the 20 teams in measure 2.
+- If Juventus is not 1st, we give its rank as it is and say that this part of the hypothesis is not supported. We do not reword the hypothesis afterwards. A tie for first place counts as first, and we say that it is shared.
+- "Goals about what xG predicted" (D17): replay the season 10,000 times with a fixed random seed. In each replay, every non-penalty shot that Juventus conceded becomes a goal with a probability equal to its xG. If fewer than 5% of the replays end with as few goals as Juventus really conceded (or fewer), the goals were "far fewer than xG": the keeper or luck also mattered. Otherwise the gap is within what chance can explain, which does not prove that there was no luck (section 8).
+- Possession (D19): if Juventus is also 1st on both measures in 5, possession does not explain the low numbers. If not, we give the ranks and say that possession explains part of them.
 
 ## 7. Milestones
 

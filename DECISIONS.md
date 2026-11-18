@@ -144,3 +144,42 @@ The code is written with an AI coding assistant (Claude Code). The decisions bel
 **Choice:** A private repository now. It becomes public at M5, after the README and the StatsBomb logo are in place, and only after my explicit OK.
 
 **Reason:** GitHub keeps a backup and the history from now on. Going public now would need a README with the StatsBomb credit and logo first (the data terms ask for them on published analysis), and my portfolio site lists my latest public repositories automatically, so an unfinished repository would appear there.
+
+## D17 · 2026-11-18 · Rule for "far fewer goals than xG" (O1)
+
+Decided before any xG number was calculated for the analysis.
+
+**Options:** replay the season 10,000 times, letting each shot conceded become a goal with a probability equal to its xG (fixed random seed); "far fewer" if fewer than 5% of the replays end with as few goals as Juventus really conceded · only the rank of goals minus xG among the 20 teams
+
+**Choice:** The replay. The rank of the 20 teams is still shown as a picture.
+
+**Reason:** The replay answers the real question: could the gap be just chance? A rank cannot. "We replayed the season 10,000 times" is also easy to explain. Limitation: one season is too short to detect a small gap, so "within chance" does not prove that there was no luck.
+
+## D18 · 2026-11-18 · Penalties and own goals in the comparison with xG (O3, O4)
+
+**Options:** leave both out (results with penalties shown as a check, own goals counted separately) · keep penalties and leave out own goals · keep both
+
+**Choice:** Leave both out of the main comparison. Results with penalties are shown as a check, and own goals are counted separately.
+
+**Reason:** A penalty is a rare, very high-xG chance, so a few kicks could decide the result; analysts often leave penalties out of xG for this reason. Own goals are not shots and have no xG, so counting them as goals would make the comparison unfair.
+
+## D19 · 2026-11-18 · Possession as another explanation (O2)
+
+**Options:** add shots and xG conceded per 100 opponent possessions as a check · only mention possession as a limitation
+
+**Choice:** Add them as a check. The main numbers stay per match.
+
+**Reason:** "Did they concede few shots only because they kept the ball?" is the most likely question about this analysis, and the check answers it with numbers. Cost: about 2 hours, and a short explanation of how possessions are counted.
+
+## D20 · 2026-11-18 · Analysis rules confirmed before any result
+
+**Options** for the first part of the hypothesis ("the fewest and weakest chances"): supported only if Juventus is 1st of the 20 teams · supported if Juventus is in the top 3
+
+**Choice:** Only if Juventus is 1st. The whole of PLAN.md section 6 is confirmed, including these proposals by the AI assistant:
+- add xG per shot conceded, to test "the weakest chances" (the first plan had no measure of the quality of each chance);
+- leave penalties out of all the main numbers, not only out of the comparison with xG;
+- test Juventus only; the other 19 teams are the comparison;
+- possession: "does not explain the low numbers" only if Juventus is also 1st on both per-possession measures;
+- if a rule must change after the results are seen, show the result of the planned rule too, and log the reason here.
+
+**Reason:** The hypothesis says "the fewest" and "the weakest", so only first place matches its words. Fixing every rule before calculating means that the results cannot shape the rules.

@@ -32,3 +32,11 @@ TEAM = "Juventus"
 N_TEAMS = 20
 MATCHES_PER_TEAM = 2 * (N_TEAMS - 1)
 N_MATCHES = N_TEAMS * (N_TEAMS - 1)
+
+# The season replay for "goals vs. xG" (PLAN.md section 6, D17). The seed was fixed
+# before any replay was run, so every computer gets the same replays.
+SEED = 2016
+N_REPLAYS = 10_000
+# "Far fewer goals than xG" if fewer than this share of the replays end with
+# as few goals as Juventus really conceded (or fewer).
+FAR_FEWER_SHARE = 0.05
