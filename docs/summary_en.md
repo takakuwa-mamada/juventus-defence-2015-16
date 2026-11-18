@@ -14,7 +14,7 @@ Serie A 2015/16 · Masaki Takakuwa · Data: StatsBomb
 - **Goals about what xG predicted: consistent.** 16 goals from non-penalty shots, against 19.3 xG. In 10,000 replays of the season, 24.7% ended with as few goals or fewer: within what chance can explain.
 - **Possession explains part.** Counted per 100 opponent possessions, Juventus is 3rd on shots and 1st on xG.
 
-![Shots conceded and the quality of the chances, for every team](../results/charts/1_chances.png) ![The replays of Juventus's season](../results/charts/3_replays.png)
+<img src="../results/charts/1_chances.png" alt="Shots conceded and the quality of the chances, for every team" width="440"> <img src="../results/charts/3_replays.png" alt="The replays of Juventus's season" width="440">
 
 **So what.** Judge a defence by the quality of the chances it allows, not only by how many shots or goals it concedes. Before explaining a headline number, break it into its drivers: Juventus's record came from very few shots and the weakest chances in the league, and luck is not needed to explain it.
 

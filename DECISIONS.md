@@ -302,3 +302,5 @@ Choices made by the AI assistant, listed here for my review:
 - Fail: they cannot say, or they read it wrongly (for example, "Juventus faced the fewest shots": they faced the 2nd fewest).
 
 If anyone does not pass, I decide whether to change the title or the axis names, and the change is logged here. The names of the people are not written down.
+
+**Changed on the same day, after checking GitHub (my choice, after the AI assistant pointed out the problem).** On a computer, GitHub then showed the two summary charts one below the other at full width (911 pixels each), so the summary page became very long. Now each chart is 440 pixels wide, so that the two charts are side by side on a computer, about as before, and one below the other on a phone, where GitHub shrinks each chart to the width of the screen. The PDF still did not change.
