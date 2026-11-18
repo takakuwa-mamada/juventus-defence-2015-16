@@ -306,3 +306,18 @@ If anyone does not pass, I decide whether to change the title or the axis names,
 **Changed on the same day, after checking GitHub (my choice, after the AI assistant pointed out the problem).** On a computer, GitHub then showed the two summary charts one below the other at full width (911 pixels each), so the summary page became very long. Now each chart is 440 pixels wide, so that the two charts are side by side on a computer, about as before, and one below the other on a phone, where GitHub shrinks each chart to the width of the screen. The PDF still did not change.
 
 **Changed again on the same day, after checking more window widths (my choice, after the AI assistant pointed out the problem).** In a window 1,280 pixels wide, GitHub showed the list of files on the left, so the text of the page was only 846 pixels wide, and the two 440-pixel charts were one below the other there. Now each chart is 410 pixels wide: the two charts and the space between them need 824 pixels. This was tested on GitHub's page before the change: the charts were side by side in windows 1,280 and 1,440 pixels wide. In a narrower window with the list of files open, they are still one below the other (for example 1,200 pixels, where the text is 766 pixels wide). The PDF still did not change.
+
+## D28 · 2026-11-19 · Correction: where the other players were is known at each shot
+
+**What was found.** While looking for the next analysis, the AI assistant counted what StatsBomb's event data contains. For almost every shot, it also records where the players were at the moment of the shot (StatsBomb's "freeze frame"; not always every player). So the limit written in the README, the one-page summaries and section 8 of PLAN.md ("the data shows what happened on the ball, not where the other players were") was wrong. No result changes: the analysis did not use these positions.
+
+**Options**
+- Correct the sentence now.
+- Correct it later, together with the next analysis, which may use these positions.
+
+**Choice:** Correct it now.
+
+**Reason:** The pages are public, and a reader who knows StatsBomb's data would notice the mistake. The new sentence says that the data shows where the other players were only when a shot was taken.
+
+Choices made by the AI assistant, listed here for my review:
+- The new wording, in English and Japanese. The one-page summaries use a short form of it, so that they still fit on one page.

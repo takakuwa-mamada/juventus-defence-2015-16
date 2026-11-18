@@ -64,7 +64,7 @@ Before any analysis, the data passed all 9 checks below ([`results/data_checks.c
 - **"Within chance" is not proof of no luck.** One season is short: the replay would have called the goals "far fewer than xG" only if Juventus had conceded 12 or fewer.
 - **The goalkeeper's part and luck cannot be fully separated.** xG measures the chance at the moment of the shot, not how well the shot was struck.
 - **Possessions are counted, not timed.** Every possession counts once, however short. This is not the share of time on the ball.
-- **Event data only.** The data shows what happened on the ball, not where the other players were.
+- **Event data only.** The data shows what happened on the ball. It shows where the other players were only when a shot was taken, and not always for every player.
 
 ## How to rerun
 

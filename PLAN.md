@@ -96,7 +96,7 @@ Time budget: about 10 hours per week. Extra time is used to finish **earlier**, 
 - **Goalkeeper skill vs. luck cannot be fully separated.** xG measures the chance at the moment of the shot, not how well the shot was struck.
 - **No big gap is not proof of no luck.** If goals conceded are close to xG, it only means the gap is within what chance can explain.
 - **Possession** may explain fewer shots conceded (O2).
-- **Event data only:** we do not see players without the ball.
+- **Event data only:** we see the players without the ball only when a shot is taken (StatsBomb's "freeze frame", not always every player). Corrected on 2026-11-19 (D28).
 - **Data terms:** the data is provided "as is" and StatsBomb can stop the service at any time. Raw data must not be shared (see `docs/statsbomb_terms.md`).
 - **Explaining AI-written code:** each step ends with a short walk-through of the key lines, so I can explain every calculation.
 - **Time:** other commitments in January–February come first, so the MVP is small and planned for mid-December.
