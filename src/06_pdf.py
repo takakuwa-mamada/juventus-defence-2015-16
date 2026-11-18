@@ -38,8 +38,9 @@ PRINT_TIMES = re.compile(rb"/(CreationDate|ModDate) ?\([^)]*\)")
 
 # One A4 page. The text uses the same ink colours as the charts (04_charts.py).
 # The two charts of a summary are side by side here, so that the summary fits on one page. The summaries
-# make them 440 pixels wide for GitHub: side by side on a computer, and one below the other on a phone,
-# where GitHub shrinks each chart to the width of the screen (D27). This rule wins over that width.
+# make them 410 pixels wide for GitHub: side by side when the text of the page is at least 824 pixels wide
+# (on a computer), and one below the other on a phone, where GitHub shrinks each chart to the width of the
+# screen (D27). This rule wins over that width.
 STYLE = """
 @page { size: A4; margin: 12mm 14mm; }
 html { font-size: 9.3pt; }
