@@ -1,0 +1,10 @@
+check,description,passed,detail
+1,"Serie A 2015/2016 is found by name in competitions.json, exactly once",True,"competition_id=12, season_id=27"
+2,"380 matches, 20 teams, 38 matches per team, and every team meets every other team once at home and once away",True,"380 matches, 20 teams, 38 to 38 matches per team, every home-away pair once"
+3,"every match has an events file with events in it, and no match appears twice",True,"380 matches, 0 repeated; events per match: 2850 to 4597"
+4,"goals counted from the events (shots + own goals) = the final score, in every match",True,"380 of 380 matches agree; all goals: 979 from the events, 979 from the scores"
+5a,"each typed-in final table adds up (for example, total goals scored = total goals conceded)",True,both tables add up
+5b,the Lega Serie A table and the RSSSF table agree on every number,True,all 20 teams agree on 7 columns
+5c,the league table rebuilt from StatsBomb's final scores = the official Lega Serie A table,True,all 20 teams agree on 7 columns
+6,every shot has an xG value between 0 and 1,True,"9998 shots, 0 without a valid xG; xG from 0.000 to 0.966"
+7,Juventus's goals conceded counted from the events = the official table,True,"20 from the events, 20 in the official table"

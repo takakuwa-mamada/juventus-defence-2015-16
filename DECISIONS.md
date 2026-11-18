@@ -91,3 +91,56 @@ The code is written with an AI coding assistant (Claude Code). The decisions bel
 **Choice:** Real name "Masaki Takakuwa", my personal email address, and a "Co-Authored-By: Claude" line in commit messages.
 
 **Reason:** Interviewers can connect the commits to me, and the co-author line matches how the README states the AI assistance (D7). Trade-off accepted: the email address is visible in the public history.
+
+## D11 · 2026-11-18 · Automatic tests
+
+**Options:** tests for the 3–4 key calculations only (about +2 hours) · tests for almost every function (about +4–5 hours) · no tests, only the data checks
+
+**Choice:** Tests for the key calculations only, for example: "in a small hand-built match with 2 goals from shots and 1 own goal, the code counts 3 goals".
+
+**Reason:** The data checks show that the data agrees with the final scores, but they cannot catch every mistake in a calculation (for example, adding up xG the wrong way). A few small tests, where the right answer is known in advance, show that each key calculation works, and they are easy to explain. Tests for every function would cost more time for little extra value.
+
+## D12 · 2026-11-18 · How the data is downloaded and read
+
+**Options:** save the original JSON files unchanged in `data/raw/` and read them with pandas · use the `statsbombpy` library
+
+**Choice:** Save the original files unchanged, and record a fingerprint of each file (a SHA-256 hash: a short code that changes if even one character of the file changes). `statsbombpy` is no longer used.
+
+**Reason:** The original files stay on my computer, so every rerun uses exactly the same data, even offline, and anyone can check that they have the same files by comparing the fingerprints. It also removes the risk that `statsbombpy` does not work with pandas 3. The cost is a little more code.
+
+## D13 · 2026-11-18 · Data checks confirmed
+
+**Options:** the 7 checks proposed in PLAN.md section 5 · the same without checks 5 and 7 (no comparison with a source outside StatsBomb)
+
+**Choice:** All 7 checks, as written.
+
+**Reason:** Checks 5 and 7 compare StatsBomb with an independent public source. This is the most convincing part of the checks, and it costs only about 1 hour (typing in the final table and checking it).
+
+## D14 · 2026-11-18 · Source of the reference final table (checks 5 and 7)
+
+**Options:** the Lega Serie A website (official) · Wikipedia (a fixed version of the page) · the Lega Serie A website, cross-checked with a second copy from RSSSF (a well-known archive of football results)
+
+**Choice:** The Lega Serie A website, cross-checked with RSSSF.
+
+**Reason:** The league's own table is the strongest reference. A second, independent copy costs about 30 more minutes and makes a typing mistake in the reference even less likely. The league website does not put the season in its address (the season is chosen in a menu), so the steps to reach the table and the date it was read are saved with it.
+
+## D15 · 2026-11-18 · How the data is downloaded and checked (M2 work plan)
+
+**Options:** the work plan as proposed by the AI assistant · changes to it
+
+**Choice:** The plan as proposed. Its main points:
+- Every file is downloaded from one fixed version (a commit) of StatsBomb's open-data repository, not from the latest version, so a rerun gets exactly the same files.
+- Downloads use Python's built-in tools, with no extra library.
+- Check 2 also checks that every team met every other team once at home and once away.
+- League tables are compared team by team, not by position, because Serie A breaks ties on points with head-to-head results.
+- If any check fails, the run stops before the analysis.
+
+**Reason:** A rerun gives the same files and the same numbers, and each check is easy to explain.
+
+## D16 · 2026-11-18 · GitHub repository: private until M5
+
+**Options:** a private repository now, made public at M5 · a public repository now
+
+**Choice:** A private repository now. It becomes public at M5, after the README and the StatsBomb logo are in place, and only after my explicit OK.
+
+**Reason:** GitHub keeps a backup and the history from now on. Going public now would need a README with the StatsBomb credit and logo first (the data terms ask for them on published analysis), and my portfolio site lists my latest public repositories automatically, so an unfinished repository would appear there.
