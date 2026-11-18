@@ -145,6 +145,8 @@ The code is written with an AI coding assistant (Claude Code). The decisions bel
 
 **Reason:** GitHub keeps a backup and the history from now on. Going public now would need a README with the StatsBomb credit and logo first (the data terms ask for them on published analysis), and my portfolio site lists my latest public repositories automatically, so an unfinished repository would appear there.
 
+**Update (2026-11-18):** the repository was made public on this date, after my explicit OK, once the README, the one-page summaries and the StatsBomb credit and logo were in place (M5).
+
 ## D17 · 2026-11-18 · Rule for "far fewer goals than xG" (O1)
 
 Decided before any xG number was calculated for the analysis.

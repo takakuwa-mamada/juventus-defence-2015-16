@@ -86,7 +86,7 @@ Time budget: about 10 hours per week. Extra time is used to finish **earlier**, 
 | M2 | Data and checks | registration with StatsBomb first (by me, see `docs/statsbomb_terms.md`); data downloaded and cached locally; data checks script and its results | 2026-11-29 | done (2026-11-18): all checks passed, see `results/data_checks.csv` |
 | M3 | Metrics | O1–O4 decided first; shots, xG and goals − xG for all 20 teams | 2026-12-06 | done (2026-11-18): rules committed first (D20), then the results: `results/hypothesis_tests.csv` |
 | M4 | Charts and results table → **MVP** | 3 charts and the results table, from one command | 2026-12-13 | done (2026-11-18): `results/charts/` and `results/*.csv`, all from `run_all.py` |
-| M5 | Write-up and publish | README; one-page summary (EN/JA); make the GitHub repository public **only after my explicit OK** (it is private until then, D16) | about 2026-12-20 | in progress (2026-11-18): README, summaries and PDFs drafted (D23–D25), waiting for my review. Then the repository goes public, only after my OK |
+| M5 | Write-up and publish | README; one-page summary (EN/JA); make the GitHub repository public **only after my explicit OK** (it is private until then, D16) | about 2026-12-20 | done (2026-11-18): README, one-page summaries and their PDFs, all written by `run_all.py` (D23–D25); the repository is public (D16) |
 | M6 | Polish and talk track | 1-minute and 5-minute explanations; likely questions and answers | 2027-01-31 | not started |
 | — | February 2027 | no new work (freeze) | — | — |
 
