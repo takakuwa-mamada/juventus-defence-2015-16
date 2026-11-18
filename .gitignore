@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environment (rebuild it from requirements.txt)
+.venv/
+
+# Raw StatsBomb data: large, and it can be downloaded again at any time
+data/
+
+# Editor and OS files
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
