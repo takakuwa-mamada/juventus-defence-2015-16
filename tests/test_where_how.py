@@ -106,3 +106,50 @@ def test_shots_without_a_place_are_found():
         }
     )
     assert where_how.shots_without_a_place(shots).index.tolist() == [1, 2, 3, 4]
+
+
+def test_zone_average_is_the_mean_of_the_shots_in_the_same_zone():
+    defenders = pd.Series([0, 2, 1, 1, 3])
+    zones = pd.Series([0, 0, 1, 1, 1])
+    # Zone 0 has 0 and 2 (mean 1); zone 1 has 1, 1 and 3 (mean 5/3). Each shot gets the mean of its zone.
+    assert where_how.zone_average(defenders, zones).tolist() == pytest.approx([1.0, 1.0, 5 / 3, 5 / 3, 5 / 3])
+
+
+def test_where_and_how_add_up_to_the_gap_over_all_the_shots_of_a_set():
+    # Team-match 0: 2 shots with xG 0.10 and 0.30, from zones where the league averages 0.20 and 0.40.
+    # Team-match 1: 1 shot with xG 0.05, from a zone where the league averages 0.05.
+    sum_xg = np.array([0.40, 0.05])
+    sum_place_xg = np.array([0.60, 0.05])
+    n_shots = np.array([2, 1])
+    sets = [np.array([0]), np.array([0, 1])]
+    where, how = where_how.where_and_how(sum_xg, sum_place_xg, n_shots, sets, league_xg_per_shot=0.25)
+    # Set [0]: places average 0.30 (0.05 above the league); shots average 0.20 (0.10 below their places).
+    assert where[0] == pytest.approx(0.05)
+    assert how[0] == pytest.approx(-0.10)
+    # Set [0, 1]: every shot counts once, so places average 0.65 / 3 and shots 0.45 / 3 (not the
+    # average of the two team-matches). Where + how = 0.15 - 0.25, the gap of the set.
+    assert where[1] == pytest.approx(0.65 / 3 - 0.25)
+    assert how[1] == pytest.approx(0.45 / 3 - 0.65 / 3)
+
+
+def test_random_sets_are_whole_team_matches_until_the_target():
+    shots = np.array([5, 0, 3, 7, 2, 4, 6, 1])  # shots conceded in 8 team-matches (one had none): 28 in all
+    sets = where_how.random_sets(shots, target=10, n_sets=200, seed=1)
+    assert len(sets) == 200
+    for one_set in sets:
+        assert len(set(one_set.tolist())) == len(one_set)  # no team-match twice in one set
+        assert shots[one_set].sum() >= 10  # at least as many shots as the target
+        assert shots[one_set[:-1]].sum() < 10  # it stops at the team-match that reaches the target
+    # The sets are different from each other, and the same seed gives the same sets again.
+    assert len({tuple(one_set.tolist()) for one_set in sets}) > 1
+    again = where_how.random_sets(shots, target=10, n_sets=200, seed=1)
+    assert all(np.array_equal(a, b) for a, b in zip(sets, again))
+    # A target above all the shots cannot be reached: stop instead of returning a set that is too small.
+    with pytest.raises(ValueError):
+        where_how.random_sets(shots, target=29, n_sets=1, seed=1)
+
+
+def test_share_of_random_sets_as_extreme_counts_ties():
+    values = np.array([1.0, 2.0, 3.0, 4.0])
+    assert where_how.share_as_extreme(values, 2.0, lower_is_extreme=True) == 0.5  # 1 and 2
+    assert where_how.share_as_extreme(values, 2.0, lower_is_extreme=False) == 0.75  # 2, 3 and 4

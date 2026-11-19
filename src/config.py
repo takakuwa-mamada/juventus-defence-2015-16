@@ -62,3 +62,10 @@ N_DISTANCE_GROUPS = 10
 N_ANGLE_GROUPS = 3
 # The check: "defenders in the way" again, with only the frames that show at least this many players.
 MIN_PLAYERS_IN_FRAME = 8
+# The random sets of team-matches that Juventus is compared with (they use SEED, like the replays),
+# and the share below which a part is supported.
+N_RANDOM_SETS = 10_000
+SUPPORTED_SHARE = 0.05
+# My expectation (D30): the where part and the how part are "about the same size", which means
+# that each of them is between a third and two thirds of Juventus's gap.
+ABOUT_THE_SAME_SIZE = (1 / 3, 2 / 3)

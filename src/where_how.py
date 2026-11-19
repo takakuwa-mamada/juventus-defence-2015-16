@@ -82,6 +82,56 @@ def place_zones(distance: pd.Series, angle: pd.Series, n_distance: int, n_angle:
     return (n_angle * distance_group + angle_group).astype(int)
 
 
+def zone_average(values: pd.Series, zones: pd.Series) -> pd.Series:
+    """For each shot, the average of the values of all the shots in its zone: the "expected" value of section 6b."""
+    return values.groupby(zones).transform("mean")
+
+
+def set_averages(sums: np.ndarray, counts: np.ndarray, sets: list[np.ndarray]) -> np.ndarray:
+    """For each set of team-matches, the average per shot: all the sums added, divided by all the shots.
+
+    Every shot counts once, so a team-match with more shots weighs more (not an average of averages).
+    """
+    return np.array([sums[one_set].sum() / counts[one_set].sum() for one_set in sets])
+
+
+def where_and_how(
+    sum_xg: np.ndarray, sum_place_xg: np.ndarray, n_shots: np.ndarray, sets: list[np.ndarray], league_xg_per_shot: float
+) -> tuple[np.ndarray, np.ndarray]:
+    """The where part and the how part of the gap, for each set of team-matches (PLAN.md section 6b).
+
+    Inputs are per team-match: the xG of its shots added up, their expected xG of the place added up, and the
+    number of shots. Where part = places - league; how part = shots - places; the two add up to the gap.
+    """
+    place = set_averages(sum_place_xg, n_shots, sets)
+    return place - league_xg_per_shot, set_averages(sum_xg, n_shots, sets) - place
+
+
+def random_sets(shots_per_team_match: np.ndarray, target: int, n_sets: int, seed: int) -> list[np.ndarray]:
+    """Random sets of whole team-matches, each with at least `target` shots (PLAN.md section 6b).
+
+    For each set, all the team-matches are put in a random order and taken one by one until the set has
+    at least `target` shots. So no team-match is used twice in one set, and the shots of a match stay together.
+    """
+    if shots_per_team_match.sum() < target:
+        raise ValueError(f"All the team-matches have {shots_per_team_match.sum()} shots, fewer than {target}")
+    rng = np.random.default_rng(seed)
+    sets = []
+    for _ in range(n_sets):
+        order = rng.permutation(len(shots_per_team_match))
+        # The first place in the order where the running total of shots reaches the target.
+        last = int(np.argmax(np.cumsum(shots_per_team_match[order]) >= target))
+        sets.append(order[: last + 1])
+    return sets
+
+
+def share_as_extreme(set_values: np.ndarray, value: float, lower_is_extreme: bool) -> float:
+    """The share of the random sets whose value is as extreme as `value` or more, on one side only (ties count)."""
+    if lower_is_extreme:
+        return float((set_values <= value).mean())
+    return float((set_values >= value).mean())
+
+
 def shots_without_a_place(shots: pd.DataFrame) -> pd.DataFrame:
     """The shots that have no location or no freeze frame. The rules say to stop if there is one (PLAN.md 6b)."""
     no_location = shots["x"].isna() | shots["y"].isna()

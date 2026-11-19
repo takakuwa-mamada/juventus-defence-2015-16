@@ -367,3 +367,17 @@ Choices made by the AI assistant, listed here for my review:
 - The code stops if a non-penalty shot has no location or no freeze frame.
 
 **Changed before the rules were committed (my choice, after the AI assistant pointed out a flaw in its own proposal).** The first version compared Juventus with random sets of 38 team-matches. But Juventus conceded fewer shots per match than the average team, so such a set has more shots than Juventus conceded, and its average varies less: Juventus's value would look less like chance than it is, and a part would be "supported" too easily. Now each random set is filled with whole team-matches until it has at least as many shots as Juventus conceded.
+
+## D31 · 2026-11-19 · Details of the second question, decided while writing the code (M7)
+
+The rules of PLAN.md section 6b were published before any of their numbers was calculated (D30). While writing the code, the AI assistant made the following choices, which the rules did not fix. All of them were made before the first results were calculated, and they are listed here for my review.
+- The distance to the nearest defender is compared "in the same way" as the defenders in the way, so direct free kicks are left out of it too.
+- Ranks: 1st is the value that helps the defence most, that is, the lowest where part, how part and distance to the nearest defender, and the most extra defenders in the way.
+- The zones are cut at the values, so two shots at the same distance, or at the same angle in one distance group, are always in the same zone. So the zones have about the same number of shots, not exactly the same.
+- A team-match in which a team conceded no shot is still one of the 760 team-matches.
+- The random sets use the same fixed random seed as the replays (D17).
+- The last team-match of a random set usually goes past Juventus's number of shots, so a random set has a few more shots than Juventus. This makes the comparison very slightly less strict. In `results/where_how_tests.csv`, every part is far from the 5% line, so this does not change any judgement.
+- The code stops if a team's shots or xG per shot differ from step 3, which reads the same data in another way.
+- The code is in `src/where_how.py` (tested in `tests/test_where_how.py`) and `src/03b_where_how.py`, which `run_all.py` runs between steps 3 and 4. The other scripts keep their names, because this file refers to them.
+
+**A check outside the repository.** The AI assistant also counted the key numbers again with other methods: the zones with another tool, the defenders in the way with another way of testing whether a point is inside a triangle, and Juventus's parts straight from its shots. All of them matched. The first version of that check had its own mistake, for the one shot taken from the goal line outside the posts; the project's code was right.

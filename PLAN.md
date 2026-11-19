@@ -124,7 +124,7 @@ Time budget: about 10 hours per week. Extra time is used to finish **earlier**, 
 | M4 | Charts and results table → **MVP** | 3 charts and the results table, from one command | 2026-12-13 | done (2026-11-18): `results/charts/` and `results/*.csv`, all from `run_all.py` |
 | M5 | Write-up and publish | README; one-page summary (EN/JA); make the GitHub repository public **only after my explicit OK** (it is private until then, D16) | about 2026-12-20 | done (2026-11-18): README, one-page summaries and their PDFs, all written by `run_all.py` (D23–D25); the repository is public (D16) |
 | M6 | Polish and talk track | 1-minute (Japanese and English) and 5-minute explanations; likely questions and answers; a link from the project to each kind of job I apply for; 3 practice interviews; a 10-second test of chart 1 with real readers (D26). The talk track itself is kept private | 2026-12-13 (was 2027-01-31, D26) | in progress (2026-11-18); paused until 2026-11-30 for M7 (D29) |
-| M7 | Why were the chances weak? (one level deeper) | rules fixed first (section 6b, D30); the split into "where" and "how" and the defenders in the way, for all 20 teams, with the check; at least one chart; README and one-page summaries updated | 2026-11-29 (D29) | in progress (2026-11-19): rules fixed |
+| M7 | Why were the chances weak? (one level deeper) | rules fixed first (section 6b, D30); the split into "where" and "how" and the defenders in the way, for all 20 teams, with the check; at least one chart; README and one-page summaries updated | 2026-11-29 (D29) | in progress (2026-11-19): rules fixed; results calculated (`results/where_how_tests.csv`, D31); chart and write-up next |
 | — | February 2027 | no new work (freeze) | — | — |
 
 ## 8. Risks and limitations
