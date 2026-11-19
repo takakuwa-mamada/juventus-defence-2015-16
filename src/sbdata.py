@@ -168,6 +168,46 @@ def load_events(
     )
 
 
+# Columns of the table returned by load_shot_frames: one row per shot (M7, PLAN.md section 6b).
+# "type" is always "Shot"; it is kept so that metrics.conceded_shots can find the team that conceded each shot.
+SHOT_FRAME_COLUMNS = ["match_id", "team", "type", "shot_type", "xg", "x", "y", "freeze_frame"]
+
+
+def shot_frame_rows(events: list[dict], match_id: int) -> list[dict]:
+    """Every shot of one match, with where it was taken and its freeze frame.
+
+    The freeze frame lists the players that the video showed at the moment of the
+    shot, with their positions (D28). A missing location or frame is kept as None,
+    so that 03b_where_how.py can find the shot and stop (PLAN.md section 6b).
+    """
+    rows = []
+    for event in events:
+        if event["type"]["name"] != "Shot":
+            continue
+        location = event.get("location") or [None, None]
+        rows.append(
+            {
+                "match_id": match_id,
+                "team": event["team"]["name"],
+                "type": "Shot",
+                "shot_type": event["shot"]["type"]["name"],
+                "xg": event["shot"].get("statsbomb_xg"),
+                "x": location[0],
+                "y": location[1],
+                "freeze_frame": event["shot"].get("freeze_frame"),
+            }
+        )
+    return rows
+
+
+def load_shot_frames(match_ids: list[int], raw_dir: Path = RAW_DIR) -> pd.DataFrame:
+    """Read each match's events file and keep every shot, with its location and freeze frame (M7)."""
+    rows = []
+    for match_id in match_ids:
+        rows.extend(shot_frame_rows(read_json(f"events/{match_id}.json", raw_dir), match_id))
+    return pd.DataFrame(rows, columns=SHOT_FRAME_COLUMNS)
+
+
 def write_manifest(raw_dir: Path, out_csv: Path) -> pd.DataFrame:
     """Write the size and SHA-256 fingerprint of every raw file (D12).
 

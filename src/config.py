@@ -55,3 +55,10 @@ N_REPLAYS = 10_000
 # "Far fewer goals than xG" if fewer than this share of the replays end with
 # as few goals as Juventus really conceded (or fewer).
 FAR_FEWER_SHARE = 0.05
+
+# The second question (PLAN.md section 6b, D30), fixed before any of its results was calculated.
+# The zones of the pitch: groups of the same size by distance, then by angle inside each.
+N_DISTANCE_GROUPS = 10
+N_ANGLE_GROUPS = 3
+# The check: "defenders in the way" again, with only the frames that show at least this many players.
+MIN_PLAYERS_IN_FRAME = 8
