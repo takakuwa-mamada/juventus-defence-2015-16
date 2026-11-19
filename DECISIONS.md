@@ -321,3 +321,49 @@ If anyone does not pass, I decide whether to change the title or the axis names,
 
 Choices made by the AI assistant, listed here for my review:
 - The new wording, in English and Japanese. The one-page summaries use a short form of it, so that they still fit on one page.
+
+## D29 · 2026-11-19 · One level deeper: why were the chances weak? (M7)
+
+**What happened.** After M5, I asked the AI assistant for ideas that would take the project to a higher level. It first counted what the data contains, league-wide and without looking at any team: the positions of the players at the moment of almost every shot (the freeze frame, D28), the same season of four other European leagues, and many defending events.
+
+**Options**
+1. Use the positions at the moment of each shot to explain why the chances against Juventus were weak (about 8–10 hours).
+2. Build my own xG model, to check that the results do not depend on StatsBomb's model (about 10–12 hours, and a new library).
+3. Compare the best defences of the five big European leagues of 2015/16 (about 15–20 hours, and about five times the data).
+
+Also considered: pressing (where the ball was won back), and an interactive dashboard.
+
+**Choice:** 1, as a new milestone, M7.
+
+**Reason:** The project so far shows what was special about Juventus's defence (the weakest chances in the league), not why. Option 1 answers why, with data that the project already has, in the time available.
+
+**When.** Options: M7 first (rules by 2026-11-22, results by 2026-11-29), then M6 from 2026-11-30 · M6 first, and M7 in December–January · both at the same time.
+
+**Choice:** M7 first. M6 keeps its deadline (2026-12-13, D26), so it has two weeks instead of three. If M7 is not finished by 2026-11-29, M6 starts anyway.
+
+**Reason:** The talk track can then include the answer from the start, and January stays free for my other commitments.
+
+## D30 · 2026-11-19 · Rules of the second question, fixed before any result (M7)
+
+**Options**
+- How to answer the question: split the gap into "where" and "how", and count the defenders in the way · only count the defenders in the way and the space of the shooter (this cannot say how much of the gap each reason explains).
+- How to judge each part: compare Juventus with random sets of team-matches, supported if fewer than 5% are as extreme · supported only if Juventus is 1st of the 20 teams.
+- Frames with few players: use all of them, and check the result without the frames with fewer than 8 players · leave those frames out · use all of them, without a check.
+
+**Choice:** Split the gap into "where" and "how", and count the defenders in the way. Judge each part against random sets of team-matches. Use all frames, with the check. The rules are in PLAN.md section 6b.
+
+**Reason:** The split shows how much of the weak chances came from where the opponents shot, and how much from how hard their shots were, like breaking a business result into its drivers. Random sets of matches answer whether a difference could be chance, as the replays did in D17; a rank cannot. A frame with few players may show a fast counter-attack with few defenders back, so leaving those frames out would bias the result; the check shows whether they matter.
+
+**My expectation**, written before any result: the where part and the how part are about the same size.
+
+Choices made by the AI assistant, listed here for my review:
+- The zones: 10 groups of the same size by distance, and 3 by angle inside each, made from the shots of all 20 teams.
+- The goalkeeper is not counted as a defender in the way. The goalkeeper's position belongs to the goalkeeper's own play, which the first hypothesis keeps apart from how the team defended.
+- Direct free kicks are left out of "defenders in the way", because the wall would count as defenders in the way.
+- The distance to the nearest defender is shown, but not judged, so that there are no more tests.
+- A random set is made of whole team-matches, so that the shots of one match stay together. The same random sets are used for all three parts and for the check.
+- In the check, the zones stay the same, and the expected numbers are calculated again without the frames with fewer than 8 players.
+- "About the same size" in my expectation means that each part is between a third and two thirds of the gap.
+- The code stops if a non-penalty shot has no location or no freeze frame.
+
+**Changed before the rules were committed (my choice, after the AI assistant pointed out a flaw in its own proposal).** The first version compared Juventus with random sets of 38 team-matches. But Juventus conceded fewer shots per match than the average team, so such a set has more shots than Juventus conceded, and its average varies less: Juventus's value would look less like chance than it is, and a part would be "supported" too easily. Now each random set is filled with whole team-matches until it has at least as many shots as Juventus conceded.
