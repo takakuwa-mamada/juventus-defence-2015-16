@@ -1,10 +1,10 @@
-"""Step 4: draw the three charts from the results tables (PLAN.md section 4, D21, D22).
+"""Step 4: draw the four charts from the results tables (PLAN.md sections 4 and 6b, D21, D22, D32).
 
 Run from the project root:
     .venv\\Scripts\\python src\\04_charts.py
 
 Every number on a chart is read from the tables in results/ (written by
-03_metrics.py). None is typed in. The charts are written to results/charts/.
+03_metrics.py and 03b_where_how.py). None is typed in. The charts are written to results/charts/.
 The titles were written for the current results: if a result changes, the
 script stops and asks for new titles, so a chart can never say the opposite
 of its results table.
@@ -53,6 +53,8 @@ def main() -> int:
     table = pd.read_csv(RESULTS_DIR / "team_metrics.csv", encoding="utf-8").set_index("team")
     tests = pd.read_csv(RESULTS_DIR / "hypothesis_tests.csv", encoding="utf-8")
     replays = pd.read_csv(RESULTS_DIR / "replay_distribution.csv", encoding="utf-8")
+    where_how_teams = pd.read_csv(RESULTS_DIR / "where_how_teams.csv", encoding="utf-8").set_index("team")
+    where_how_tests = pd.read_csv(RESULTS_DIR / "where_how_tests.csv", encoding="utf-8")
     if not LOGO_FILE.exists():
         sys.exit(f"StatsBomb's logo is missing ({LOGO_FILE}). Run src/01_download.py first.")
     logo = mpimg.imread(LOGO_FILE)
@@ -61,6 +63,7 @@ def main() -> int:
     save(chances_chart(table, tests, logo), "1_chances.png")
     save(goals_vs_xg_chart(table, logo), "2_goals_vs_xg.png")
     save(replays_chart(table, tests, replays, logo), "3_replays.png")
+    save(where_how_chart(where_how_teams, where_how_tests, logo), "4_where_how.png")
     return 0
 
 
@@ -171,10 +174,73 @@ def replays_chart(table: pd.DataFrame, tests: pd.DataFrame, replays: pd.DataFram
     return fig
 
 
+def where_how_chart(teams: pd.DataFrame, tests: pd.DataFrame, logo) -> Figure:
+    """Chart 4: from the league's xG per shot to Juventus's, in two steps: where and how (PLAN.md 6b, D32)."""
+    for part in ("where", "how"):
+        expect_result(tests, part, "supported")
+        if tests.loc[tests["part"] == part, "rank_of_20"].item() != 1:
+            sys.exit(f"The subtitle of chart 4 says the {part} part was the lowest. Rewrite it in src/04_charts.py.")
+    expect_result(tests, "my expectation", "met")  # the title says "about the same size"
+    league, where, how = (part_value(tests, part) for part in ("league", "where", "how"))
+    juve = teams.loc[TEAM]
+    place, actual = float(juve["place_xg_per_shot"]), float(juve["xg_per_shot_conceded"])
+    # The two steps must lead from the league's bar to Juventus's. Every number in the tables is
+    # rounded to 4 decimals, so a difference of up to 0.00015 is only rounding.
+    if abs(league + where - place) > 0.00015 or abs(place + how - actual) > 0.00015:
+        sys.exit("In results/where_how_*.csv, the league's value plus the two parts is not Juventus's value.")
+
+    title = f"{TEAM}'s weak chances: two parts of about the same size"
+    subtitle = (
+        f"From the league's average xG per shot to {TEAM}'s. Where: what shots from about the same "
+        "distance and angle are worth on average. How: the rest. Each part was the lowest of the "
+        f"{len(teams)} teams, and unlikely to be chance (rule fixed in advance)."
+    )
+    fig, ax = new_chart(title, subtitle, plot_in=2.4, left_in=1.75, bottom_in=0.95, logo=logo)
+
+    # From the top: the league, the two steps, Juventus. Each step starts where the bar above ended,
+    # and a thin dashed line joins them. Grey is the league; orange is Juventus and its two parts.
+    names = ["League average", "Where the shots\nwere taken", "How (from the\nsame places)", TEAM]
+    starts = [0, place, actual, 0]
+    ends = [league, league, place, actual]
+    colours = [OTHER_COLOUR, TEAM_COLOUR, TEAM_COLOUR, TEAM_COLOUR]
+    rows = list(range(len(names)))
+    height = 0.55
+    ax.barh(rows, [end - start for start, end in zip(starts, ends)], left=starts, height=height,
+            color=colours, linewidth=0, zorder=3)
+    for row, x in enumerate([league, place, actual]):
+        ax.plot([x, x], [row + height / 2, row + 1 - height / 2], color=INK_MUTED, linewidth=1,
+                linestyle=(0, (2, 2)), zorder=2)
+    ax.set_yticks(rows, names)
+    ax.invert_yaxis()  # the league at the top, Juventus at the bottom
+    for label in ax.get_yticklabels():
+        if label.get_text() == TEAM:
+            label.set_color(INK)
+            label.set_fontweight("bold")
+
+    # The values: the two totals at the right end of their bars, each step at the end it moves to.
+    def minus(text: str) -> str:
+        return text.replace("-", "−")
+
+    ax.annotate(f"{league:.1%}", (league, 0), xytext=(6, 0), textcoords="offset points", ha="left",
+                va="center", fontsize=LABEL_PT, color=INK_SECONDARY)
+    for row, (step, x) in enumerate([(where, place), (how, actual)], start=1):
+        ax.annotate(minus(f"{100 * step:.1f}"), (x, row), xytext=(-6, 0), textcoords="offset points",
+                    ha="right", va="center", fontsize=LABEL_PT, color=INK, fontweight="bold")
+    ax.annotate(f"{actual:.1%}", (actual, 3), xytext=(6, 0), textcoords="offset points", ha="left",
+                va="center", fontsize=LABEL_PT, color=INK, fontweight="bold")
+
+    ax.set_xlim(0, league * 1.2)
+    ax.grid(axis="x", color=GRID, linewidth=0.8)
+    ax.xaxis.set_major_formatter(PercentFormatter(xmax=1, decimals=0))
+    ax.set_xlabel("Average chance that a shot goes in\n(xG per shot, ← lower)", fontsize=LABEL_PT,
+                  color=INK_SECONDARY)
+    return fig
+
+
 def new_chart(title: str, subtitle: str, plot_in: float, left_in: float, bottom_in: float, logo):
     """A chart with a title, a subtitle, one plot, and a footer with the data credit and StatsBomb's logo.
 
-    Sizes are set in inches, so the text has the same size on all three charts.
+    Sizes are set in inches, so the text has the same size on all the charts.
     plot_in: height of the plot; left_in and bottom_in: room for the tick labels and axis labels.
     """
     title_lines = textwrap.wrap(title, TITLE_CHARS)
@@ -225,6 +291,11 @@ def expect_result(tests: pd.DataFrame, part: str, start: str) -> None:
             f"The chart titles were written for a result that starts with '{start}' in '{part}', "
             f"but the result is now '{result}'. Rewrite the titles in src/04_charts.py."
         )
+
+
+def part_value(tests: pd.DataFrame, part: str) -> float:
+    """The value of one part (one row) of a tests table."""
+    return float(tests.loc[tests["part"] == part, "value"].item())
 
 
 def save(fig: Figure, name: str) -> None:

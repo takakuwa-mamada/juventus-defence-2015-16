@@ -11,7 +11,8 @@ tables in results/:
   MIN_PLAYERS_IN_FRAME players (the check at the end of section 6b).
 - where_how_teams.csv: for every team, the split of its gap into "where" and "how",
   and the defenders in the way, with ranks;
-- where_how_tests.csv: each part for Juventus, its rule and the result.
+- where_how_tests.csv: each part for Juventus, its rule and the result (and, first, the league's
+  xG per shot, which the parts are measured from).
 """
 import sys
 
@@ -273,6 +274,8 @@ def judge(
     )
 
     rows = [
+        row("league", "the league's xG per shot, over the non-penalty shots of all teams", league_xg_per_shot,
+            None, None, None, SHOWN_ONLY, SHOWN_ONLY),
         row("gap", "xG per shot conceded minus the league's xG per shot", team["gap"], None, None, None,
             "the where part and the how part add up to the gap", SHOWN_ONLY),
         row("where", "where part: expected xG of the places minus the league's xG per shot", team["where_part"],

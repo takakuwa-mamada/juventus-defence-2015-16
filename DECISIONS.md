@@ -381,3 +381,23 @@ The rules of PLAN.md section 6b were published before any of their numbers was c
 - The code is in `src/where_how.py` (tested in `tests/test_where_how.py`) and `src/03b_where_how.py`, which `run_all.py` runs between steps 3 and 4. The other scripts keep their names, because this file refers to them.
 
 **A check outside the repository.** The AI assistant also counted the key numbers again with other methods: the zones with another tool, the defenders in the way with another way of testing whether a point is inside a triangle, and Juventus's parts straight from its shots. All of them matched. The first version of that check had its own mistake, for the one shot taken from the goal line outside the posts; the project's code was right.
+
+## D32 · 2026-11-19 · The chart of the second question (M7)
+
+Chosen after the results, as in D21.
+
+**Options**
+- A. a bridge chart: from the league's xG per shot to Juventus's, in two steps (where, then how)
+- B. a scatter plot of the 20 teams, with the where part across and the how part up
+- C. a bar chart of the extra defenders in the way, for the 20 teams
+- For the defenders in the way (not supported): say it in the text of the README and the summaries · also draw chart C in the README
+
+**Choice:** A, and the defenders in the way in the text only.
+
+**Reason:** A shows the main result in one picture: Juventus's gap from the league splits into two parts of about the same size. Breaking a number into its drivers is a common way to explain a result. B compares the teams, but its axes ("the where part", "the how part") are hard to read for someone who does not know the method. C shows only the part that was not supported. With one chart, each summary can still fit on one page.
+
+Choices made by the AI assistant, listed here for my review:
+- The chart is `results/charts/4_where_how.png`. Grey is the league; orange is Juventus and its two parts. These are the two colours of the other charts, so no new colour was needed.
+- The title uses the words of my expectation, "about the same size" (D30). The subtitle says that each part was the lowest of the 20 teams and unlikely to be chance, because the chart itself shows only Juventus. As for the other charts, the script stops if one of these results changes.
+- `results/where_how_tests.csv` now also has the league's xG per shot (shown, not judged), so every number on the chart is read from the results tables. Nothing else in the tables changed.
+- The value of each step is at the end it moves to (on the left of the bar), and each total is at the end of its bar. In the sketch I chose from, the values of the steps were on the right.

@@ -126,11 +126,16 @@ def print_pdf(browser: str, page: Path, pdf: Path, profile: Path) -> None:
 
 def wait_for_pdf(pdf: Path, seconds: float) -> bool:
     """Wait until the PDF is complete. Edge can return before the PDF is written (another Edge process
-    does the printing), so the file is checked until it ends with "%%EOF", the last line of every PDF."""
+    does the printing), so the file is checked until it ends with "%%EOF", the last line of every PDF.
+    While Edge is still writing the file, Windows may not let another program read it (this stopped a
+    full run once, on 2026-11-19), so that also means "not finished yet"."""
     deadline = time.monotonic() + seconds
     while time.monotonic() < deadline:
-        if pdf.exists() and pdf.read_bytes().rstrip().endswith(b"%%EOF"):
-            return True
+        try:
+            if pdf.read_bytes().rstrip().endswith(b"%%EOF"):
+                return True
+        except (FileNotFoundError, PermissionError):  # not there yet, or still being written
+            pass
         time.sleep(0.2)
     return False
 
