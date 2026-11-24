@@ -15,7 +15,7 @@ Serie A 2015/16 · Masaki Takakuwa · Data: StatsBomb
 - **Possession explains part.** Counted per 100 opponent possessions, Juventus is 3rd on shots and 1st on xG.
 - **One level deeper: where and how, about half each.** The opponents shot from worse places than the league's average (1.4 points below 8.4%) and, from the same places, their shots were still weaker (1.4 less). Both parts were the lowest of the 20 teams and unlikely to be chance. More defenders in the way do not explain it (15th of 20).
 
-<img src="../results/charts/1_chances.png" alt="Shots conceded and the quality of the chances, for every team" width="410"> <img src="../results/charts/4_where_how.png" alt="From the league's xG per shot to Juventus's, in two steps: where and how" width="410">
+<img src="../results/charts/1_chances.png" alt="Shots conceded and the quality of the chances, for every team" width="410" align="top"> <img src="../results/charts/4_where_how.png" alt="From the league's xG per shot to Juventus's, in two steps: where and how" width="410" align="top">
 
 **So what.** Judge a defence by the quality of the chances it allows, not only by how many shots or goals it concedes. Before explaining a headline number, break it into its drivers: Juventus's record came from very few shots and the weakest chances in the league, and luck is not needed to explain it.
 
