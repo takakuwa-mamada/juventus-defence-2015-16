@@ -17,7 +17,10 @@ import sys
 
 import pandas as pd
 
-from config import DOCS_DIR, FAR_FEWER_SHARE, LOGO_URL, RESULTS_DIR, ROOT, TEAM, TEMPLATES_DIR
+from config import (
+    DOCS_DIR, FAR_FEWER_SHARE, LOGO_URL, MIN_PLAYERS_IN_FRAME, N_ANGLE_GROUPS, N_DISTANCE_GROUPS, N_RANDOM_SETS,
+    RESULTS_DIR, ROOT, SUPPORTED_SHARE, TEAM, TEMPLATES_DIR,
+)
 
 # Each template, and the file written from it.
 OUTPUTS = {
@@ -30,6 +33,8 @@ PLACEHOLDER = re.compile(r"\{\{(\w+)\}\}")
 TYPED_TERMS_ALLOWED = ["2015/16", "juventus-defence-2015-16", "per 100 ", "100 回あたり"]
 # Japanese names for the teams that the Japanese summary may name. Any other team keeps StatsBomb's name.
 JAPANESE_NAMES = {"Napoli": "ナポリ"}
+# The parts of the second question that are judged (PLAN.md section 6b). The check is not a test of its own.
+JUDGED_PARTS = ["where", "how", "defenders in the way"]
 
 
 def main() -> int:
@@ -38,9 +43,13 @@ def main() -> int:
     replays = read("replay_distribution.csv")
     checks = read("data_checks.csv")
     manifest = read("data_manifest.csv")
+    where_how_teams = read("where_how_teams.csv").set_index("team")
+    where_how_tests = read("where_how_tests.csv")
 
     check_results(table, tests, checks)
+    check_where_how(where_how_tests)
     values = values_for_text(table, tests, replays, checks, manifest)
+    values.update(where_how_values(where_how_teams, where_how_tests))
 
     # Fill every template first, and write the files only if all of them are fine.
     texts = {}
@@ -77,6 +86,28 @@ def check_results(table: pd.DataFrame, tests: pd.DataFrame, checks: pd.DataFrame
         "the team with the fewest shots allowed better chances": fewest["xg_per_shot_conceded"] > juve["xg_per_shot_conceded"],
         "Juventus had the lowest xG conceded per match": juve["rank_xg_conceded_per_match"] == 1,
         "Juventus conceded fewer goals than xG": juve["goals_minus_xg"] < 0,
+    }
+    for fact, holds in facts.items():
+        if not holds:
+            sys.exit(f"The text in templates/ says: {fact}. The results no longer show this. Rewrite the text.")
+
+
+def check_where_how(tests: pd.DataFrame) -> None:
+    """Stop if a result of the second question (PLAN.md section 6b) is not the one that the text was written for."""
+    expect(tests, "where", "supported")
+    expect(tests, "how", "supported")
+    expect(tests, "defenders in the way", "not supported")
+    expect(tests, "defenders in the way (check)", "not supported")
+    expect(tests, "my expectation", "met")
+    part = tests.set_index("part")
+    facts = {
+        "the shots against Juventus came from worse places than the league's": part.loc["where", "value"] < 0,
+        "from the same places, they were less likely to go in": part.loc["how", "value"] < 0,
+        "the where part of Juventus was the lowest of the teams": part.loc["where", "rank_of_20"] == 1,
+        "the how part of Juventus was the lowest of the teams": part.loc["how", "rank_of_20"] == 1,
+        "Juventus did not have more defenders in the way than usual": part.loc["defenders in the way", "value"] <= 0,
+        "the check gave the same judgement": "the same judgement" in part.loc["defenders in the way (check)", "result"],
+        "the nearest defender was closer than usual": part.loc["nearest defender", "value"] < 0,
     }
     for fact, holds in facts.items():
         if not holds:
@@ -149,6 +180,48 @@ def values_for_text(table, tests, replays, checks, manifest) -> dict[str, str]:
         "download_gb": f"{manifest['bytes'].sum() / 1e9:.1f} GB",
         "logo_url": LOGO_URL,
     }
+
+
+def where_how_values(teams: pd.DataFrame, tests: pd.DataFrame) -> dict[str, str]:
+    """The values of the second question (PLAN.md section 6b), already written as text."""
+    part = tests.set_index("part")
+    juve = teams.loc[TEAM]
+    where_part_of_gap = float(part.loc["my expectation", "value"])
+    n_tests = len(JUDGED_PARTS)
+    return {
+        # From the league's xG per shot to Juventus's, in two steps.
+        "league_xg_per_shot_pct": f"{part.loc['league', 'value']:.1%}",
+        "juve_place_xg_per_shot_pct": f"{juve['place_xg_per_shot']:.1%}",
+        "gap_points": points(part.loc["gap", "value"]),
+        "where_points": points(part.loc["where", "value"]),
+        "how_points": points(part.loc["how", "value"]),
+        "where_part_of_gap": f"{where_part_of_gap:.0%}",
+        "how_part_of_gap": f"{1 - where_part_of_gap:.0%}",
+        "where_share": f"{part.loc['where', 'share_of_random_sets']:.2%}",
+        "how_share": f"{part.loc['how', 'share_of_random_sets']:.2%}",
+        # The defenders in the way, and the nearest defender (shown, not judged).
+        "defenders_rank": ordinal(int(part.loc["defenders in the way", "rank_of_20"])),
+        "defenders_rank_n": str(int(part.loc["defenders in the way", "rank_of_20"])),
+        "defenders_share": f"{part.loc['defenders in the way', 'share_of_random_sets']:.0%}",
+        "check_defenders_rank": ordinal(int(part.loc["defenders in the way (check)", "rank_of_20"])),
+        "nearest_defender_text": f"{-part.loc['nearest defender', 'value']:.2f} yards closer",
+        "nearest_defender_rank": ordinal(int(part.loc["nearest defender", "rank_of_20"])),
+        # The rules (config.py).
+        "n_zones": str(N_DISTANCE_GROUPS * N_ANGLE_GROUPS),
+        "n_distance_groups": str(N_DISTANCE_GROUPS),
+        "n_angle_groups": str(N_ANGLE_GROUPS),
+        "n_random_sets": f"{N_RANDOM_SETS:,}",
+        "n_random_sets_ja": japanese_count(N_RANDOM_SETS),
+        "supported_pct": f"{SUPPORTED_SHARE:.0%}",
+        "min_players_in_frame": str(MIN_PLAYERS_IN_FRAME),
+        "n_new_tests": str(n_tests),
+        "any_new_test_pct": f"{n_tests * SUPPORTED_SHARE:.0%}",  # the most it can be, without assuming independence
+    }
+
+
+def points(share: float) -> str:
+    """-0.0136 -> "1.4": a difference of two shares, in percentage points (the text says whether it is less)."""
+    return f"{abs(100 * share):.1f}"
 
 
 def all_goals_conceded(table: pd.DataFrame) -> pd.Series:

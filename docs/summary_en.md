@@ -13,14 +13,15 @@ Serie A 2015/16 · Masaki Takakuwa · Data: StatsBomb
 - **The fewest chances: not supported, but close.** 9.1 shots per match, the 2nd fewest. Napoli faced 2 shots fewer all season, but more dangerous ones (7.1% per shot).
 - **Goals about what xG predicted: consistent.** 16 goals from non-penalty shots, against 19.3 xG. In 10,000 replays of the season, 24.7% ended with as few goals or fewer: within what chance can explain.
 - **Possession explains part.** Counted per 100 opponent possessions, Juventus is 3rd on shots and 1st on xG.
+- **One level deeper: where and how, about half each.** The opponents shot from worse places than the league's average (1.4 points below 8.4%) and, from the same places, their shots were still weaker (1.4 less). Both parts were the lowest of the 20 teams and unlikely to be chance. More defenders in the way do not explain it (15th of 20).
 
-<img src="../results/charts/1_chances.png" alt="Shots conceded and the quality of the chances, for every team" width="410"> <img src="../results/charts/3_replays.png" alt="The replays of Juventus's season" width="410">
+<img src="../results/charts/1_chances.png" alt="Shots conceded and the quality of the chances, for every team" width="410"> <img src="../results/charts/4_where_how.png" alt="From the league's xG per shot to Juventus's, in two steps: where and how" width="410">
 
 **So what.** Judge a defence by the quality of the chances it allows, not only by how many shots or goals it concedes. Before explaining a headline number, break it into its drivers: Juventus's record came from very few shots and the weakest chances in the league, and luck is not needed to explain it.
 
 **How it was checked.** Before the analysis, the data passed all 9 checks: for example, the goals in the events add up to the final score of every match, and the league table rebuilt from the data matches the official one.
 
-**Limits.** One season and one data provider (xG is StatsBomb's model). "Within chance" is not proof of no luck. Event data shows where the other players were only when a shot was taken.
+**Limits.** One season and one data provider (xG is StatsBomb's model). "Within chance" is not proof of no luck. Event data shows where the other players were only when a shot was taken. The how part is everything that is not the place (for example pressure, headers or the goalkeeper's position), not only how Juventus defended.
 
 Code, data checks and every decision: [github.com/takakuwa-mamada/juventus-defence-2015-16](https://github.com/takakuwa-mamada/juventus-defence-2015-16). The code was written with an AI coding assistant (Claude Code); the question, hypothesis, data checks, chart choices and interpretation are mine.
 

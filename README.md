@@ -3,7 +3,7 @@
 
 Juventus conceded only 20 goals in 38 league matches in 2015/16, the fewest of the 20 teams (Napoli were next, with 32). This project asks why, with StatsBomb's free event data for all 380 matches of the season.
 
-**Short answer.** Juventus allowed the weakest chances in the league, and almost the fewest shots. Their goals conceded are within what chance can explain, so luck is not needed to explain their record.
+**Short answer.** Juventus allowed the weakest chances in the league, and almost the fewest shots. Their goals conceded are within what chance can explain, so luck is not needed to explain their record. One level deeper, the weakness of the chances splits into two parts of about the same size: the opponents shot from worse places, and from the same places their shots were still less likely to go in.
 
 **One-page summary:** [English](docs/summary_en.md) ([PDF](docs/summary_en.pdf)) · [Japanese](docs/summary_ja.md) ([PDF](docs/summary_ja.pdf))
 
@@ -30,6 +30,22 @@ The rules for judging each part of the hypothesis were fixed and committed befor
 
 All the results: [`results/hypothesis_tests.csv`](results/hypothesis_tests.csv) (the tests) and [`results/team_metrics.csv`](results/team_metrics.csv) (every measure for every team).
 
+## One level deeper: why were the chances weak?
+
+Juventus allowed the weakest chances. Why? Either the opponents shot from places where shots rarely go in (**where**), or, from the same places, their shots were less likely to go in (**how**), for example because more defenders were in the way. A second set of rules was fixed and committed before any of these results was calculated: see [the second set of rules in PLAN.md](PLAN.md#6b-rules-of-the-second-question-fixed-on-2026-11-19-before-any-result-was-calculated) and commit [`759899f`](https://github.com/takakuwa-mamada/juventus-defence-2015-16/commit/759899fbcabf277f23ff7a81e1a6e59321113d5b).
+
+For each shot, StatsBomb's data also gives the position of the players in view at that moment (the "freeze frame"). Every non-penalty shot of the season was put in one of 30 zones by its distance and angle to the goal (10 groups by distance, then 3 by angle), each with about the same number of shots. The expected xG of the place of a shot is the league's average xG in its zone. For each part, Juventus's value was compared with 10,000 random sets of whole team-matches, each with at least as many shots as Juventus faced: a part is supported if fewer than 5% of the random sets are as extreme.
+
+**Where the shots were taken: supported.** The league's average xG per shot was 8.4%. For shots from the same places as the shots against Juventus, it was 7.0%: 1.4 percentage points less, the lowest of the 20 teams. Only 0.11% of the random sets were as low.
+
+**How, from the same places: supported.** From those places, the shots against Juventus had an xG per shot of only 5.6%: another 1.4 percentage points less, again the lowest of the 20 teams (0.10% of the random sets were as low). So the gap of 2.8 percentage points splits into two parts of about the same size, 49% and 51%, as I expected before the results.
+
+**More defenders between the ball and the goal: not supported.** Compared with the league's shots from the same places, the shots against Juventus did not have more defenders in the way (direct free kicks, with their wall, are left out). Juventus was 15th of the 20 teams, and 70% of the random sets had at least as many. Without the frames that show fewer than 8 players, the result is the same (15th). So the how part is not explained by the number of defenders in the way. What it is made of, for example the pressure on the shooter, headers, or the goalkeeper's position, was not tested. On average, the nearest defender was 0.05 yards closer than usual for the same places (8th of the 20 teams; shown, not judged).
+
+![From the league's xG per shot to Juventus's, in two steps: where and how](results/charts/4_where_how.png)
+
+All the results: [`results/where_how_tests.csv`](results/where_how_tests.csv) (the tests), [`results/where_how_teams.csv`](results/where_how_teams.csv) (every team) and [`results/where_how_zones.csv`](results/where_how_zones.csv) (the zones).
+
 ## The other two charts
 
 ![Goals minus xG for every team](results/charts/2_goals_vs_xg.png)
@@ -40,7 +56,7 @@ All the results: [`results/hypothesis_tests.csv`](results/hypothesis_tests.csv) 
 
 > Judge a defence by the quality of the chances it allows, not only by how many shots or goals it concedes.
 >
-> Before explaining a headline number, break it into its drivers: Juventus's record came from very few shots and the weakest chances in the league, and luck is not needed to explain it.
+> Before explaining a headline number, break it into its drivers: Juventus's record came from very few shots and the weakest chances in the league, and luck is not needed to explain it. One level deeper, the weak chances came about half from where the opponents shot and half from how.
 
 ## How the data was checked
 
@@ -65,6 +81,8 @@ Before any analysis, the data passed all 9 checks below ([`results/data_checks.c
 - **The goalkeeper's part and luck cannot be fully separated.** xG measures the chance at the moment of the shot, not how well the shot was struck.
 - **Possessions are counted, not timed.** Every possession counts once, however short. This is not the share of time on the ball.
 - **Event data only.** The data shows what happened on the ball. It shows where the other players were only when a shot was taken, and not always for every player.
+- **What "how" means.** The how part is everything that is not the place: the pressure on the shooter, the body part, the type of shot, the goalkeeper's position, and small differences of place inside a zone. So it is not only how well Juventus defended. StatsBomb's xG may already use some of the players' positions.
+- **3 more tests.** Each test of the second question was judged at 5%, so the chance that at least one of them is supported by luck alone can be up to 15%. For the two supported parts, only 0.11% and 0.10% of the random sets were as low.
 
 ## How to rerun
 

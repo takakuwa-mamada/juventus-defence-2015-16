@@ -12,14 +12,15 @@ Serie A 2015/16 · Masaki Takakuwa · Data: StatsBomb
 - **The fewest chances: not supported, but close.** {{juve_shots_per_match}} shots per match, the {{juve_shots_rank}} fewest. {{fewest_shots_team}} faced {{shots_gap_text}} fewer all season, but more dangerous ones ({{fewest_shots_xg_per_shot_pct}} per shot).
 - **Goals about what xG predicted: consistent.** {{juve_goals_from_shots}} goals from non-penalty shots, against {{juve_xg}} xG. In {{n_replays}} replays of the season, {{replay_share}} ended with as few goals or fewer: within what chance can explain.
 - **Possession explains part.** Counted per 100 opponent possessions, Juventus is {{juve_shots_per_100_rank}} on shots and {{juve_xg_per_100_rank}} on xG.
+- **One level deeper: where and how, about half each.** The opponents shot from worse places than the league's average ({{where_points}} points below {{league_xg_per_shot_pct}}) and, from the same places, their shots were still weaker ({{how_points}} less). Both parts were the lowest of the {{n_teams}} teams and unlikely to be chance. More defenders in the way do not explain it ({{defenders_rank}} of {{n_teams}}).
 
-<img src="../results/charts/1_chances.png" alt="Shots conceded and the quality of the chances, for every team" width="410"> <img src="../results/charts/3_replays.png" alt="The replays of Juventus's season" width="410">
+<img src="../results/charts/1_chances.png" alt="Shots conceded and the quality of the chances, for every team" width="410"> <img src="../results/charts/4_where_how.png" alt="From the league's xG per shot to Juventus's, in two steps: where and how" width="410">
 
 **So what.** Judge a defence by the quality of the chances it allows, not only by how many shots or goals it concedes. Before explaining a headline number, break it into its drivers: Juventus's record came from very few shots and the weakest chances in the league, and luck is not needed to explain it.
 
 **How it was checked.** Before the analysis, the data passed all {{n_checks}} checks: for example, the goals in the events add up to the final score of every match, and the league table rebuilt from the data matches the official one.
 
-**Limits.** One season and one data provider (xG is StatsBomb's model). "Within chance" is not proof of no luck. Event data shows where the other players were only when a shot was taken.
+**Limits.** One season and one data provider (xG is StatsBomb's model). "Within chance" is not proof of no luck. Event data shows where the other players were only when a shot was taken. The how part is everything that is not the place (for example pressure, headers or the goalkeeper's position), not only how Juventus defended.
 
 Code, data checks and every decision: [github.com/takakuwa-mamada/juventus-defence-2015-16](https://github.com/takakuwa-mamada/juventus-defence-2015-16). The code was written with an AI coding assistant (Claude Code); the question, hypothesis, data checks, chart choices and interpretation are mine.
 

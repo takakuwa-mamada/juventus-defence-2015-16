@@ -401,3 +401,23 @@ Choices made by the AI assistant, listed here for my review:
 - The title uses the words of my expectation, "about the same size" (D30). The subtitle says that each part was the lowest of the 20 teams and unlikely to be chance, because the chart itself shows only Juventus. As for the other charts, the script stops if one of these results changes.
 - `results/where_how_tests.csv` now also has the league's xG per shot (shown, not judged), so every number on the chart is read from the results tables. Nothing else in the tables changed.
 - The value of each step is at the end it moves to (on the left of the bar), and each total is at the end of its bar. In the sketch I chose from, the values of the steps were on the right.
+
+## D33 · 2026-11-23 · The second question in the README and the one-page summaries (M7)
+
+**Options** for the one-page summaries, which must still fit on one page (before this change, about 4 more lines of English and 3 of Japanese fitted):
+- A. put chart 4 in place of chart 3 (the replays): charts 1 and 4 side by side. Chart 3 stays in the README, and the summaries still give its result in words
+- B. words only: charts 1 and 3 as before, and chart 4 only in the README
+- C. charts 1, 3 and 4 side by side (each smaller, so the text on the charts is very small in print)
+
+For the README: a new section after "What I found" · one more paragraph in "What I found", with chart 4 next to the other charts.
+
+**Choice:** A, and a new section in the README.
+
+**Reason:** The two charts of a summary now tell one story: Juventus allowed the weakest chances (chart 1), and why they were weak (chart 4). The result of the replays is still in the text, and its chart is in the README. A section of its own shows that the second question had its own rules, fixed before its results.
+
+Choices made by the AI assistant, listed here for my review:
+- Each summary gets one more point under "What the data shows" and one more sentence under "Limits": what "how" means (everything that is not the place, so not only how Juventus defended). The README gets the new section, one more sentence in "Short answer" and in "So what", and two more limitations: what "how" means, and the chance that one of the new tests is supported by luck alone (the most it can be, from the rules).
+- To keep the Japanese summary on one page, it is shorter in two places: the note on xG no longer says that xG comes from StatsBomb's model (the limits still say so), and the data checks give one example instead of two. The new point in the English summary was written short for the same reason.
+- The Japanese limits said 「運がなかった」, which can be read as "they were unlucky". It now says 「運が関係なかった」 ("luck played no part"), the meaning of the English summary.
+- `src/05_report.py` reads every number of the new text from `results/where_how_tests.csv`, `results/where_how_teams.csv` and `src/config.py`. As for the first question, it stops if a result that the text describes changes.
+- Room left at the bottom of each page, measured by printing with Edge on my computer: about 3 mm in English and 6 mm in Japanese. On a computer with other fonts, a summary may not fit; the PDF step then stops and says so.
