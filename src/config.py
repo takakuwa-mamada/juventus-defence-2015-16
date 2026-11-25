@@ -69,3 +69,7 @@ SUPPORTED_SHARE = 0.05
 # My expectation (D30): the where part and the how part are "about the same size", which means
 # that each of them is between a third and two thirds of Juventus's gap.
 ABOUT_THE_SAME_SIZE = (1 / 3, 2 / 3)
+
+# The third question (PLAN.md section 6c, D36) uses the same zones, random sets and 5% line as the second.
+# My expectation (D36): the three kinds explain "most" of Juventus's how part, which means two thirds or more.
+MOST_OF_THE_HOW_PART = 2 / 3

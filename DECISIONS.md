@@ -478,3 +478,19 @@ Choices made by the AI assistant, listed here for my review:
 - "Most" in my expectation means two thirds of the how part or more, as D30 used thirds.
 - The code stops if a shot's key pass cannot be found in the same match.
 - Whether the one-page summaries show the result is decided after the results, as in D33. About 3 mm (English) and 6 mm (Japanese) of each page are left.
+
+## D37 · 2026-11-25 · Details of the third question, decided while writing the code (M8)
+
+The rules of PLAN.md section 6c were published before any of their numbers was calculated for any team (D36). While writing the code, the AI assistant made the following choices, which the rules did not fix. All of them were made before the first results for the teams were calculated, and they are listed here for my review.
+- A shot's key pass must be a pass of the same match: the code stops if the linked event is missing, and also if it is not a pass. In the data, every key pass is a pass by the same team in the same match, so the code never stops here.
+- StatsBomb marks a through ball in two ways (the mark "through ball", or the technique "Through Ball"); either one counts. In this data, the two always agree.
+- StatsBomb's other kinds of pass, "Recovery" and "Interception", are open play, not set pieces.
+- The code also stops if a kind of last pass is unknown, if a column of the model adds nothing to the others (for example a kind that no shot has), or if a column belongs to no part.
+- The code stops if its zones or any team's how part differ from step 3b. Step 3b does not save its random sets, so the code also checks that its sets are the same: they must give the same shares as `results/where_how_tests.csv` for the where part and the how part.
+- Ranks: 1st is the lowest part, the one that helps the defence most, as in D31. The rest also gets a rank, which is shown only.
+- My expectation is met if the three parts together are at least two thirds of the how part, also if they are more than all of it (then the rest has the other sign). Only the model without header × under pressure is used for it.
+- Shown, not judged: for each kind, the league's shots, their plain average how part and the coefficients (`results/how_kinds_league.csv`); for each team, how many more shots of each kind it faced per shot than the league's shots from the same zones (the columns that start with "extra_" in `results/how_kinds_teams.csv`). In the model without the check, a team's part is the coefficient × this number, added over the five kinds for the last-pass part.
+- The share of the how part that the three parts explain is shown for Juventus only. For a team whose how part is close to zero, it would mean little.
+- The code is in `src/how_kinds.py` (tested in `tests/test_how_kinds.py`) and `src/03c_how_kinds.py`, which `run_all.py` runs after step 3b.
+
+**A check outside the repository.** The AI assistant also counted the key numbers again in other ways: the raw files read with other code, the zones made with another tool, the model fitted with one yes-or-no column per zone instead of subtracting the zone averages (this gives the same coefficients), and the parts, the random sets and the shares made again for all teams. All of them matched.
