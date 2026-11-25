@@ -423,3 +423,58 @@ Choices made by the AI assistant, listed here for my review:
 - Room left at the bottom of each page, measured by printing with Edge on my computer: about 3 mm in English and 6 mm in Japanese. On a computer with other fonts, a summary may not fit; the PDF step then stops and says so.
 
 **Changed on 2026-11-24, after checking GitHub (my choice, after the AI assistant pointed out the problem).** GitHub lines up two pictures side by side at the bottom. Chart 4 is shorter than chart 1, so on a computer it started 68 pixels lower, and the titles of the two charts were not at the same height. (Chart 3, shown there before, is about as tall as chart 1, so this did not show.) The PDF already lines them up at the top (`src/06_pdf.py`). Options: line up the tops on GitHub too · leave it. Now both charts in each summary have `align="top"`, which GitHub keeps, so their tops line up on GitHub as well. The PDF did not change.
+
+## D34 · 2026-11-25 · The talk track and the practice move out of this plan (M6)
+
+**What happened.** I prepare and practise for interviews on my own, and I ask the AI assistant when I have a question.
+
+**Choice:** M6 leaves this plan. The talk track, the links to each kind of job I apply for, and the practice interviews are mine, outside this repository. The AI assistant answers when I ask, and does not start this work by itself.
+
+**Reason:** This work already happens on my own, so the plan no longer schedules it.
+
+Choices made by the AI assistant, listed here for my review:
+- The 10-second test of chart 1 (D27) leaves the plan with M6. I can still do it on my own, with the rules of D27.
+
+## D35 · 2026-11-25 · Two levels deeper: what is the how part made of? (M8)
+
+**What happened.** After M7, I asked to take the project deeper. As before D29, the AI assistant first counted league-wide numbers only, without looking at any team.
+
+**Options**
+1. Split the how part of M7 by the kinds of shots: headers, pressure, the kind of the last pass and the goalkeeper's position (about 8–10 hours).
+2. Follow each possession of the opponents, to see where their attacks stopped: before the final third, before the penalty box, or before a shot (about 10–12 hours).
+3. Build my own xG model, to check that the results do not depend on StatsBomb's model (about 10–12 hours, and maybe a new library).
+
+**Choice:** 1, as a new milestone, M8.
+
+**Reason:** The README says that what the how part is made of "was not tested". This is the next question a reader would ask, and the data to answer it is already in the project. The zones and the random sets of M7 can be used again, so it takes the least time.
+
+**When.** Options: by 2026-12-13 · by 2026-12-20 · by the end of January.
+
+**Choice:** by 2026-12-20 (the AI assistant suggested 2026-12-13): the rules by 2026-11-29, the results by 2026-12-06, a chart by 2026-12-13, and the README and the summaries by 2026-12-20. January stays free for my other commitments, as in D29.
+
+## D36 · 2026-11-25 · Rules of the third question, fixed before any result (M8)
+
+**What was looked at first**, league-wide only, with no team split out (with a script outside the repository):
+- Headers are 14% of the non-penalty shots, and their xG is on average 7.4 points lower than the average of their zones. Most headers come after a cross (45%) or a corner (32%).
+- Pressure goes with a lower xG, more for headers than for other shots: inside the zones, 3.6 points lower for headers and 0.8 points lower for other shots.
+- Shots with the goalkeeper more than 3.3 yards off the goal line have an xG 5.4 points above the average of their zones. These are mostly one-on-ones, where the goalkeeper has to come out.
+
+**Options**
+- The kinds: headers, pressure and the kind of the last pass · headers and pressure only · headers, pressure and the goalkeeper's position (the examples that the README gives).
+- The method: a straight-line model inside the zones, whose parts add up to the how part exactly · the averages of groups of zone × kind, with every order of the kinds tried and averaged (many groups would have very few shots, for example headers from far away).
+
+**Choice:** headers, pressure and the kind of the last pass, with a straight-line model inside the zones. The rules are in PLAN.md section 6c.
+
+**Reason:** The three kinds come straight from the event data, with clear definitions. The goalkeeper's position is left out: far off the line usually means a one-on-one, so its part would mix the kind of chance with the goalkeeper's positioning, and the first hypothesis keeps the goalkeeper's own play apart from how the team defended (D30). The straight-line model gives each kind its own part, the parts add up to the how part, and the order of the kinds does not matter. For a straight-line model, these parts are the SHAP values of the kinds, with the league's shots from the same zone as the baseline; SHAP values are a common way to explain what drives a model's output. Groups of zone × kind would need many extra rules for the groups with few shots.
+
+**My expectation**, written before any result: the three kinds explain most of the how part (two thirds or more).
+
+Choices made by the AI assistant, listed here for my review:
+- The kinds of the last pass are sorted in the order of section 6c, so a corner that is also a cross counts as a corner. "Any other pass" is the reference, because it is the most common kind.
+- A shot is a header when StatsBomb's body part is "Head"; every other body part counts as not a header.
+- The model uses all the league's non-penalty shots, Juventus's too, as the zone averages of section 6b do. It has no constant term: inside each zone, the how part and every column already average zero.
+- The same random sets, random seed and 5% line as in section 6b.
+- In the check, the part of header × under pressure is split half and half, because a joint effect of two kinds cannot be given to one of them alone.
+- "Most" in my expectation means two thirds of the how part or more, as D30 used thirds.
+- The code stops if a shot's key pass cannot be found in the same match.
+- Whether the one-page summaries show the result is decided after the results, as in D33. About 3 mm (English) and 6 mm (Japanese) of each page are left.
