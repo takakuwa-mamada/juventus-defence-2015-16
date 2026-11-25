@@ -208,6 +208,52 @@ def load_shot_frames(match_ids: list[int], raw_dir: Path = RAW_DIR) -> pd.DataFr
     return pd.DataFrame(rows, columns=SHOT_FRAME_COLUMNS)
 
 
+# Columns of the table returned by load_shot_kinds: one row per shot (M8, PLAN.md section 6c).
+# The first seven are read in the same way as in load_shot_frames, so the zones are the same as in M7.
+SHOT_KIND_COLUMNS = ["match_id", "team", "type", "shot_type", "xg", "x", "y", "body_part", "under_pressure", "key_pass"]
+
+
+def shot_kind_rows(events: list[dict], match_id: int) -> list[dict]:
+    """Every shot of one match, with where it was taken and what kind of shot it was (M8).
+
+    "key_pass" is the "pass" part of the pass that StatsBomb links to the shot, or None if the shot
+    has none. A link to anything that is not a pass of this match stops the run, as the rules say (D36).
+    """
+    passes = {event["id"]: event["pass"] for event in events if event["type"]["name"] == "Pass"}
+    rows = []
+    for event in events:
+        if event["type"]["name"] != "Shot":
+            continue
+        key_pass_id = event["shot"].get("key_pass_id")
+        if key_pass_id is not None and key_pass_id not in passes:
+            raise ValueError(f"Match {match_id}: the key pass {key_pass_id} of a shot is not a pass of this match")
+        location = event.get("location") or [None, None]
+        rows.append(
+            {
+                "match_id": match_id,
+                "team": event["team"]["name"],
+                "type": "Shot",
+                "shot_type": event["shot"]["type"]["name"],
+                "xg": event["shot"].get("statsbomb_xg"),
+                "x": location[0],
+                "y": location[1],
+                "body_part": event["shot"]["body_part"]["name"],
+                # StatsBomb writes this mark only when it is true.
+                "under_pressure": bool(event.get("under_pressure", False)),
+                "key_pass": passes[key_pass_id] if key_pass_id is not None else None,
+            }
+        )
+    return rows
+
+
+def load_shot_kinds(match_ids: list[int], raw_dir: Path = RAW_DIR) -> pd.DataFrame:
+    """Read each match's events file and keep every shot, with its location and its kinds (M8)."""
+    rows = []
+    for match_id in match_ids:
+        rows.extend(shot_kind_rows(read_json(f"events/{match_id}.json", raw_dir), match_id))
+    return pd.DataFrame(rows, columns=SHOT_KIND_COLUMNS)
+
+
 def write_manifest(raw_dir: Path, out_csv: Path) -> pd.DataFrame:
     """Write the size and SHA-256 fingerprint of every raw file (D12).
 

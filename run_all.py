@@ -16,6 +16,7 @@ STEPS = [
     "src/02_checks.py",  # the data checks -> results/data_checks.csv
     "src/03_metrics.py",  # the measures and the hypothesis tests -> results/team_metrics.csv and 2 more
     "src/03b_where_how.py",  # the second question, where and how (PLAN.md section 6b) -> results/where_how_*.csv
+    "src/03c_how_kinds.py",  # the third question, what the how part is made of (PLAN.md section 6c) -> results/how_kinds_*.csv
     "src/04_charts.py",  # the four charts -> results/charts/
     "src/05_report.py",  # the text, with every number from results/ -> README.md and docs/summary_*.md
     "src/06_pdf.py",  # the one-page summaries printed to PDF -> docs/summary_*.pdf (needs Edge or Chrome)
