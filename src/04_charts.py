@@ -1,10 +1,10 @@
-"""Step 4: draw the four charts from the results tables (PLAN.md sections 4 and 6b, D21, D22, D32).
+"""Step 4: draw the five charts from the results tables (PLAN.md sections 4, 6b and 6c, D21, D22, D32, D38).
 
 Run from the project root:
     .venv\\Scripts\\python src\\04_charts.py
 
-Every number on a chart is read from the tables in results/ (written by
-03_metrics.py and 03b_where_how.py). None is typed in. The charts are written to results/charts/.
+Every number on a chart is read from the tables in results/ (written by 03_metrics.py,
+03b_where_how.py and 03c_how_kinds.py). None is typed in. The charts are written to results/charts/.
 The titles were written for the current results: if a result changes, the
 script stops and asks for new titles, so a chart can never say the opposite
 of its results table.
@@ -16,9 +16,19 @@ import matplotlib
 import matplotlib.image as mpimg
 import pandas as pd
 from matplotlib.figure import Figure
-from matplotlib.ticker import MaxNLocator, PercentFormatter
+from matplotlib.ticker import MaxNLocator, MultipleLocator, PercentFormatter
 
-from config import CHARTS_DIR, COMPETITION_NAME, FAR_FEWER_SHARE, LOGO_FILE, RESULTS_DIR, ROOT, SEASON_NAME, TEAM
+from config import (
+    CHARTS_DIR,
+    COMPETITION_NAME,
+    FAR_FEWER_SHARE,
+    LOGO_FILE,
+    MOST_OF_THE_HOW_PART,
+    RESULTS_DIR,
+    ROOT,
+    SEASON_NAME,
+    TEAM,
+)
 
 # Colours. Juventus orange and the grey of the other teams stay distinct for
 # colour-blind readers, and both stand out from the background (checked with a
@@ -55,6 +65,7 @@ def main() -> int:
     replays = pd.read_csv(RESULTS_DIR / "replay_distribution.csv", encoding="utf-8")
     where_how_teams = pd.read_csv(RESULTS_DIR / "where_how_teams.csv", encoding="utf-8").set_index("team")
     where_how_tests = pd.read_csv(RESULTS_DIR / "where_how_tests.csv", encoding="utf-8")
+    how_kinds_tests = pd.read_csv(RESULTS_DIR / "how_kinds_tests.csv", encoding="utf-8")
     if not LOGO_FILE.exists():
         sys.exit(f"StatsBomb's logo is missing ({LOGO_FILE}). Run src/01_download.py first.")
     logo = mpimg.imread(LOGO_FILE)
@@ -64,6 +75,7 @@ def main() -> int:
     save(goals_vs_xg_chart(table, logo), "2_goals_vs_xg.png")
     save(replays_chart(table, tests, replays, logo), "3_replays.png")
     save(where_how_chart(where_how_teams, where_how_tests, logo), "4_where_how.png")
+    save(how_kinds_chart(how_kinds_tests, logo), "5_how_kinds.png")
     return 0
 
 
@@ -234,6 +246,72 @@ def where_how_chart(teams: pd.DataFrame, tests: pd.DataFrame, logo) -> Figure:
     ax.xaxis.set_major_formatter(PercentFormatter(xmax=1, decimals=0))
     ax.set_xlabel("Average chance that a shot goes in\n(xG per shot, ← lower)", fontsize=LABEL_PT,
                   color=INK_SECONDARY)
+    return fig
+
+
+def how_kinds_chart(tests: pd.DataFrame, logo) -> Figure:
+    """Chart 5: Juventus's how part split into headers, pressure, the last pass and the rest (PLAN.md 6c, D38)."""
+    for part in ("header", "pressure", "last pass"):
+        expect_result(tests, part, "not supported")  # the subtitle says each is within what chance can explain
+    expect_result(tests, "my expectation", "not met")  # the title says "only"
+    explained = part_value(tests, "my expectation")
+    if explained < 0:
+        sys.exit("The title of chart 5 was written for a share of 0% or more. Rewrite it in src/04_charts.py.")
+    how = part_value(tests, "how")
+    steps = [part_value(tests, part) for part in ("header", "pressure", "last pass", "rest")]
+    # The four parts must add up to the how part. Each of the five numbers is rounded to 4 decimals in the
+    # table, so a difference of up to 0.00025 is only rounding.
+    if abs(sum(steps) - how) > 0.00025:
+        sys.exit("In results/how_kinds_tests.csv, the four parts do not add up to the how part.")
+
+    title = f"The how part: headers, pressure and the last pass explain only {explained:.0%}"
+    subtitle = (
+        f"How part: {TEAM}'s xG per shot conceded minus what shots from the same places are worth. "
+        f"We expected the three kinds to explain {MOST_OF_THE_HOW_PART:.0%} or more. Each is within "
+        "what chance can explain (rule fixed in advance). The rest: what they do not explain."
+    )
+    fig, ax = new_chart(title, subtitle, plot_in=3.0, left_in=1.75, bottom_in=0.95, logo=logo)
+
+    # In percentage points of xG per shot. From the top: the three kinds and the rest, each starting where the
+    # bar above ended (the first one at zero), and a thin dashed line joins them. At the bottom, the how part
+    # as a whole, from zero to where the rest ended. All the bars are Juventus's, so all are orange.
+    names = ["Headers", "Under pressure", "Kind of the\nlast pass", "The rest", "How (from the\nsame places)"]
+    points = [100 * step for step in steps] + [100 * how]
+    ends, end = [], 0.0
+    for step in points[:-1]:
+        end += step
+        ends.append(end)
+    starts = [0.0] + ends[:-1] + [0.0]
+    ends.append(points[-1])
+    rows = list(range(len(names)))
+    height = 0.55
+    ax.barh(rows, points, left=starts, height=height, color=TEAM_COLOUR, linewidth=0, zorder=3)
+    for row, x in enumerate(ends[:-1]):
+        ax.plot([x, x], [row + height / 2, row + 1 - height / 2], color=INK_MUTED, linewidth=1,
+                linestyle=(0, (2, 2)), zorder=2)
+    ax.axvline(0, color=AXIS, linewidth=1, zorder=2)
+    ax.spines["left"].set_visible(False)  # the left edge means nothing here; zero is the line
+    ax.set_yticks(rows, names)
+    ax.invert_yaxis()  # the three kinds at the top, the how part as a whole at the bottom
+    ax.get_yticklabels()[-1].set_color(INK)
+    ax.get_yticklabels()[-1].set_fontweight("bold")
+
+    # Each value at the end its bar moves to, as on chart 4. Two decimals, because with one the header and
+    # pressure parts would read 0.0. The rest and the whole how part stand out; the three kinds do not.
+    for row, (step, x) in enumerate(zip(points, ends)):
+        stands_out = row >= 3
+        ax.annotate(f"{step:+.2f}".replace("-", "−"), (x, row), xytext=(6 if step > 0 else -6, 0),
+                    textcoords="offset points", ha="left" if step > 0 else "right", va="center",
+                    fontsize=LABEL_PT, color=INK if stands_out else INK_SECONDARY,
+                    fontweight="bold" if stands_out else "normal")
+
+    # Room on both sides of the bars for the values.
+    low, high = min([0.0] + ends), max([0.0] + ends)
+    span = high - low
+    ax.set_xlim(low - 0.45 * span, high + 0.35 * span)
+    ax.xaxis.set_major_locator(MultipleLocator(0.5))
+    ax.grid(axis="x", color=GRID, linewidth=0.8)
+    ax.set_xlabel("Percentage points of xG per shot\n(← lower)", fontsize=LABEL_PT, color=INK_SECONDARY)
     return fig
 
 

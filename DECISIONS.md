@@ -494,3 +494,21 @@ The rules of PLAN.md section 6c were published before any of their numbers was c
 - The code is in `src/how_kinds.py` (tested in `tests/test_how_kinds.py`) and `src/03c_how_kinds.py`, which `run_all.py` runs after step 3b.
 
 **A check outside the repository.** The AI assistant also counted the key numbers again in other ways: the raw files read with other code, the zones made with another tool, the model fitted with one yes-or-no column per zone instead of subtracting the zone averages (this gives the same coefficients), and the parts, the random sets and the shares made again for all teams. All of them matched.
+
+## D38 · 2026-11-25 · The chart of the third question (M8)
+
+Chosen after the results, as in D21 and D32.
+
+**Options**
+- A. a bridge chart of Juventus's how part, in the same form as chart 4: the header part, the pressure part, the last-pass part and the rest
+- B. the 20 teams: the three parts together, and the rest
+- C. chart 4 made longer: from the league's xG per shot to Juventus's, through the where part, the three parts and the rest
+
+**Choice:** A.
+
+**Reason:** A shows the main result in one picture: the three kinds explain only a small share of the how part, and most of it is the rest. It has the same form as chart 4, so it reads as the next level of it. B compares the teams, but with 20 rows and parts of both signs it is hard to read on a phone, and the three parts together were not judged. In C, on the scale of chart 4, the header and pressure parts would be too thin to see.
+
+Choices made by the AI assistant, listed here for my review:
+- The chart is `results/charts/5_how_kinds.png`. All its bars are Juventus's, so all are orange, and a thin line marks zero. The how part as a whole is at the bottom, with the same name as on chart 4.
+- The values are in percentage points of xG per shot, with two decimals: with one, the header and pressure parts would read 0.0. Each value is at the end its bar moves to, as on chart 4. The values of the rest and of the whole how part are in bold; those of the three kinds are not.
+- The title gives the share of the how part that the three parts explain together (the row "my expectation" of `results/how_kinds_tests.csv`). The subtitle gives the share I expected (D36) and says that each of the three parts is within what chance can explain. As for the other charts, the script stops if one of these results changes. It also stops if the share is below zero, or if the four parts do not add up to the how part beyond rounding.
