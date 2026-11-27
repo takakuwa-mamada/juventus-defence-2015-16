@@ -18,8 +18,8 @@ import sys
 import pandas as pd
 
 from config import (
-    DOCS_DIR, FAR_FEWER_SHARE, LOGO_URL, MIN_PLAYERS_IN_FRAME, N_ANGLE_GROUPS, N_DISTANCE_GROUPS, N_RANDOM_SETS,
-    RESULTS_DIR, ROOT, SUPPORTED_SHARE, TEAM, TEMPLATES_DIR,
+    DOCS_DIR, FAR_FEWER_SHARE, LOGO_URL, MIN_PLAYERS_IN_FRAME, MOST_OF_THE_HOW_PART, N_ANGLE_GROUPS, N_DISTANCE_GROUPS,
+    N_RANDOM_SETS, RESULTS_DIR, ROOT, SUPPORTED_SHARE, TEAM, TEMPLATES_DIR,
 )
 
 # Each template, and the file written from it.
@@ -35,6 +35,10 @@ TYPED_TERMS_ALLOWED = ["2015/16", "juventus-defence-2015-16", "per 100 ", "100 �
 JAPANESE_NAMES = {"Napoli": "ナポリ"}
 # The parts of the second question that are judged (PLAN.md section 6b). The check is not a test of its own.
 JUDGED_PARTS = ["where", "how", "defenders in the way"]
+# The parts of the third question that are judged (PLAN.md section 6c).
+HOW_KINDS_JUDGED_PARTS = ["header", "pressure", "last pass"]
+# The kinds of last pass with a coefficient. The sixth, any other pass, is the one they are compared with.
+LAST_PASS_KINDS = ["corner", "another set piece", "cross", "through ball", "no pass"]
 
 
 def main() -> int:
@@ -45,11 +49,17 @@ def main() -> int:
     manifest = read("data_manifest.csv")
     where_how_teams = read("where_how_teams.csv").set_index("team")
     where_how_tests = read("where_how_tests.csv")
+    how_kinds_teams = read("how_kinds_teams.csv").set_index("team")
+    how_kinds_tests = read("how_kinds_tests.csv")
+    how_kinds_league = read("how_kinds_league.csv").set_index("kind")
 
     check_results(table, tests, checks)
     check_where_how(where_how_tests)
+    check_how_kinds(how_kinds_teams, how_kinds_tests, how_kinds_league)
     values = values_for_text(table, tests, replays, checks, manifest)
     values.update(where_how_values(where_how_teams, where_how_tests))
+    values.update(how_kinds_values(how_kinds_teams, how_kinds_tests, how_kinds_league))
+    values.update(new_tests_values())
 
     # Fill every template first, and write the files only if all of them are fine.
     texts = {}
@@ -112,6 +122,68 @@ def check_where_how(tests: pd.DataFrame) -> None:
     for fact, holds in facts.items():
         if not holds:
             sys.exit(f"The text in templates/ says: {fact}. The results no longer show this. Rewrite the text.")
+
+
+def check_how_kinds(teams: pd.DataFrame, tests: pd.DataFrame, league: pd.DataFrame) -> None:
+    """Stop if a result of the third question (PLAN.md section 6c) is not the one that the text was written for."""
+    for name in HOW_KINDS_JUDGED_PARTS:
+        expect(tests, name, "not supported")
+        expect(tests, f"{name} (check)", "not supported")
+    expect(tests, "my expectation", "not met")
+    part = tests.set_index("part")
+    juve = teams.loc[TEAM]
+    how = part.loc["how", "value"]
+    coefficient = league["coefficient"]
+    passes = {kind: coefficient[f"last pass: {kind}"] for kind in LAST_PASS_KINDS}
+    pieces = last_pass_pieces(juve, league)
+    facts = {
+        "each of the three parts is judged by a rule fixed in advance": all(
+            part.loc[name, "rule"].startswith("supported if") for name in HOW_KINDS_JUDGED_PARTS
+        ),
+        "the check gave the same judgements": all(
+            "the same judgement" in part.loc[f"{name} (check)", "result"] for name in HOW_KINDS_JUDGED_PARTS
+        ),
+        "a header is worth less than another shot from the same zone": coefficient["header"] < 0,
+        "a shot under pressure is worth less, but by less than a header": (
+            coefficient["header"] < coefficient["under pressure"] < 0
+        ),
+        "Juventus's opponents had headers less often than the league from the same places": juve["extra_header"] < 0,
+        "they were under pressure less often than the league from the same places": juve["extra_under_pressure"] < 0,
+        "the header part and the pressure part are close to zero (under a tenth of the how part)": all(
+            abs(part.loc[name, "value"]) < abs(how) / 10 for name in ("header", "pressure")
+        ),
+        "the last-pass part of Juventus was the lowest of the teams": part.loc["last pass", "rank_of_20"] == 1,
+        "the through ball is the kind of last pass that is worth the most": (
+            max(passes, key=passes.get) == "through ball" and passes["through ball"] > 0
+        ),
+        "Juventus's opponents had fewer shots after a through ball than the league from the same places": (
+            juve["extra_last_pass_through_ball"] < 0
+        ),
+        "most of the last-pass part comes from the through ball": pieces["through ball"] / sum(pieces.values()) > 0.5,
+        "the how part and the rest are below zero, and the rest is the smaller of the two": (
+            how < part.loc["rest", "value"] < 0
+        ),
+        "the rest of Juventus was the lowest of the teams": part.loc["rest", "rank_of_20"] == 1,
+        "the three parts explain less than half of the how part, and not less than nothing": (
+            0 <= part.loc["my expectation", "value"] < 0.5
+        ),
+        "league-wide, pressure lowers the xG of headers more than that of other shots": (
+            league.loc["header x under pressure", "check_coefficient"] < 0
+        ),
+    }
+    for fact, holds in facts.items():
+        if not holds:
+            sys.exit(f"The text in templates/ says: {fact}. The results no longer show this. Rewrite the text.")
+
+
+def last_pass_pieces(juve: pd.Series, league: pd.DataFrame) -> dict[str, float]:
+    """Each kind of last pass: its coefficient x how much more often Juventus's opponents had it than the league
+    from the same places. Together they make the last-pass part. The tables are rounded to 4 decimals, so the
+    pieces are only close; they are used to check the words "most of it", and are not shown."""
+    return {
+        kind: league.loc[f"last pass: {kind}", "coefficient"] * juve["extra_last_pass_" + kind.replace(" ", "_")]
+        for kind in LAST_PASS_KINDS
+    }
 
 
 def expect(tests: pd.DataFrame, part: str, start: str) -> None:
@@ -187,7 +259,6 @@ def where_how_values(teams: pd.DataFrame, tests: pd.DataFrame) -> dict[str, str]
     part = tests.set_index("part")
     juve = teams.loc[TEAM]
     where_part_of_gap = float(part.loc["my expectation", "value"])
-    n_tests = len(JUDGED_PARTS)
     return {
         # From the league's xG per shot to Juventus's, in two steps.
         "league_xg_per_shot_pct": f"{part.loc['league', 'value']:.1%}",
@@ -214,14 +285,57 @@ def where_how_values(teams: pd.DataFrame, tests: pd.DataFrame) -> dict[str, str]
         "n_random_sets_ja": japanese_count(N_RANDOM_SETS),
         "supported_pct": f"{SUPPORTED_SHARE:.0%}",
         "min_players_in_frame": str(MIN_PLAYERS_IN_FRAME),
-        "n_new_tests": str(n_tests),
-        "any_new_test_pct": f"{n_tests * SUPPORTED_SHARE:.0%}",  # the most it can be, without assuming independence
+    }
+
+
+def how_kinds_values(teams: pd.DataFrame, tests: pd.DataFrame, league: pd.DataFrame) -> dict[str, str]:
+    """The values of the third question (PLAN.md section 6c), already written as text."""
+    part = tests.set_index("part")
+    juve = teams.loc[TEAM]
+    return {
+        # League-wide: how much a header, or pressure, changes the xG of a shot from the same zone.
+        "header_effect_points": points(league.loc["header", "coefficient"]),
+        "pressure_effect_points": points(league.loc["under pressure", "coefficient"]),
+        # How much less often Juventus's opponents had each kind than the league from the same places.
+        "extra_header_points": points(juve["extra_header"]),
+        "extra_pressure_points": points(juve["extra_under_pressure"]),
+        # The three parts of Juventus, with their sign, as on chart 5, and how they compare.
+        "header_part_points": signed_points(part.loc["header", "value"]),
+        "pressure_part_points": signed_points(part.loc["pressure", "value"]),
+        "last_pass_part_points": signed_points(part.loc["last pass", "value"]),
+        "header_rank": ordinal(int(part.loc["header", "rank_of_20"])),
+        "pressure_rank": ordinal(int(part.loc["pressure", "rank_of_20"])),
+        "header_share": f"{part.loc['header', 'share_of_random_sets']:.0%}",
+        "pressure_share": f"{part.loc['pressure', 'share_of_random_sets']:.0%}",
+        "last_pass_share": f"{part.loc['last pass', 'share_of_random_sets']:.0%}",
+        # The rest, the whole how part, and my expectation (D36).
+        "rest_points": f"{abs(100 * part.loc['rest', 'value']):.2f}",
+        "how_part_points": f"{abs(100 * part.loc['how', 'value']):.2f}",
+        "kinds_share": f"{part.loc['my expectation', 'value']:.0%}",
+        "kinds_expected_pct": f"{MOST_OF_THE_HOW_PART:.0%}",
+    }
+
+
+def new_tests_values() -> dict[str, str]:
+    """The tests that the second and third questions added (PLAN.md section 8), and the most that the chance
+    of at least one of them being supported by luck alone can be, without assuming that they are independent."""
+    n_second, n_third = len(JUDGED_PARTS), len(HOW_KINDS_JUDGED_PARTS)
+    return {
+        "n_tests_second": str(n_second),
+        "n_tests_third": str(n_third),
+        "n_new_tests": str(n_second + n_third),
+        "any_new_test_pct": f"{(n_second + n_third) * SUPPORTED_SHARE:.0%}",
     }
 
 
 def points(share: float) -> str:
     """-0.0136 -> "1.4": a difference of two shares, in percentage points (the text says whether it is less)."""
     return f"{abs(100 * share):.1f}"
+
+
+def signed_points(share: float) -> str:
+    """0.0002 -> "+0.02", -0.0016 -> "−0.16": a part in percentage points, with its sign, as on chart 5."""
+    return f"{100 * share:+.2f}".replace("-", "−")
 
 
 def all_goals_conceded(table: pd.DataFrame) -> pd.Series:

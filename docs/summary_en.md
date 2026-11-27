@@ -21,7 +21,7 @@ Serie A 2015/16 · Masaki Takakuwa · Data: StatsBomb
 
 **How it was checked.** Before the analysis, the data passed all 9 checks: for example, the goals in the events add up to the final score of every match, and the league table rebuilt from the data matches the official one.
 
-**Limits.** One season and one data provider (xG is StatsBomb's model). "Within chance" is not proof of no luck. Event data shows where the other players were only when a shot was taken. The how part is everything that is not the place (for example pressure, headers or the goalkeeper's position), not only how Juventus defended.
+**Limits.** One season and one data provider (xG is StatsBomb's model). "Within chance" is not proof of no luck. Event data shows where the other players were only when a shot was taken. The how part is everything that is not the place, not only how Juventus defended; headers, pressure and the kind of the last pass explain only 9% of it (I expected 67% or more).
 
 Code, data checks and every decision: [github.com/takakuwa-mamada/juventus-defence-2015-16](https://github.com/takakuwa-mamada/juventus-defence-2015-16). The code was written with an AI coding assistant (Claude Code); the question, hypothesis, data checks, chart choices and interpretation are mine.
 

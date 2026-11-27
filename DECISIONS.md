@@ -512,3 +512,31 @@ Choices made by the AI assistant, listed here for my review:
 - The chart is `results/charts/5_how_kinds.png`. All its bars are Juventus's, so all are orange, and a thin line marks zero. The how part as a whole is at the bottom, with the same name as on chart 4.
 - The values are in percentage points of xG per shot, with two decimals: with one, the header and pressure parts would read 0.0. Each value is at the end its bar moves to, as on chart 4. The values of the rest and of the whole how part are in bold; those of the three kinds are not.
 - The title gives the share of the how part that the three parts explain together (the row "my expectation" of `results/how_kinds_tests.csv`). The subtitle gives the share I expected (D36) and says that each of the three parts is within what chance can explain. As for the other charts, the script stops if one of these results changes. It also stops if the share is below zero, or if the four parts do not add up to the how part beyond rounding.
+
+## D39 · 2026-11-27 · The third question in the README and the one-page summaries (M8)
+
+Decided after the results, as PLAN.md section 4 planned for M8, and as in D33.
+
+**Options for the README**
+- A. a new section after the one of the second question: "Two levels deeper: what is the how part made of?"
+- B. a short paragraph and chart 5 at the end of the section of the second question, with no new heading
+
+**Options for the one-page summaries**
+- A. no change: the third question only in the README
+- B. the last sentence of the limits rewritten with the result of the third question, with no chart
+- C. one more point in the list of results, with no chart
+
+**Choice:** README A, summaries B.
+
+**Reason:** In the README, a section of its own shows the three questions in the same form, each with its own rules fixed first. In B, two questions with different rules (sections 6b and 6c) would share one section. In the summaries, the old last sentence of the limits gave pressure and headers as examples of the how part, but the third question shows that they explain almost none of Juventus's how part, so that sentence had to change anyway. B says this, and that my expectation was not met, in about the same space. C would need about two more lines, and neither summary has that room. Chart 5 is not added to the summaries: it starts from the how part of chart 4 and is hard to read without it.
+
+The README's section of the second question said that what the how part is made of, "for example the pressure on the shooter, headers, or the goalkeeper's position, was not tested". After the third question this was no longer true, so the sentence now points to the new section.
+
+Choices made by the AI assistant, listed here for my review:
+- The AI assistant drafted the text, and I read the draft before it went into `templates/`.
+- The three parts are written with their sign and two decimals, as on chart 5. The other differences are written without a sign, with "less", as in the section of the second question. The shares of the random sets are whole percents, as for the defenders in the way.
+- "Close to zero" means smaller than a tenth of the how part. "Most of it comes from fewer shots after a through ball" means: of the five kinds of last pass, the through ball has the largest piece (its coefficient times Juventus's extra share), and that piece is more than half of the last-pass part. The pieces come from the rounded values in the tables, and they are shown, not judged.
+- The examples of what the rest may be (the goalkeeper's position, the type of shot, small differences of place inside a zone) come from the limitation "What 'how' means", and the text says that they are not tested.
+- The text does not name decisions such as D36: a typed number in a template stops `src/05_report.py`. So the README says "before the results" instead, as in the section of the second question.
+- `src/05_report.py` stops if one of the facts that the new text states in words is no longer true: for example, if one of the three parts becomes supported, if my expectation is met, or if the through ball is no longer most of the last-pass part.
+- The room left at the bottom of each printed summary, measured as in D33: English about 3 mm (as before), Japanese about 1 mm (one more line).

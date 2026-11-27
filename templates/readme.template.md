@@ -2,7 +2,7 @@
 
 Juventus conceded only {{juve_goals_total}} goals in {{matches_per_team}} league matches in 2015/16, the fewest of the {{n_teams}} teams ({{second_goals_team}} were next, with {{second_goals_total}}). This project asks why, with StatsBomb's free event data for all {{n_matches}} matches of the season.
 
-**Short answer.** Juventus allowed the weakest chances in the league, and almost the fewest shots. Their goals conceded are within what chance can explain, so luck is not needed to explain their record. One level deeper, the weakness of the chances splits into two parts of about the same size: the opponents shot from worse places, and from the same places their shots were still less likely to go in.
+**Short answer.** Juventus allowed the weakest chances in the league, and almost the fewest shots. Their goals conceded are within what chance can explain, so luck is not needed to explain their record. One level deeper, the weakness of the chances splits into two parts of about the same size: the opponents shot from worse places, and from the same places their shots were still less likely to go in. Two levels deeper, three kinds of shots (headers, shots under pressure and the kind of the last pass) explain only {{kinds_share}} of the how part; I expected {{kinds_expected_pct}} or more.
 
 **One-page summary:** [English](docs/summary_en.md) ([PDF](docs/summary_en.pdf)) · [Japanese](docs/summary_ja.md) ([PDF](docs/summary_ja.pdf))
 
@@ -39,11 +39,33 @@ For each shot, StatsBomb's data also gives the position of the players in view a
 
 **How, from the same places: supported.** From those places, the shots against Juventus had an xG per shot of only {{juve_xg_per_shot_pct}}: another {{how_points}} percentage points less, again the lowest of the {{n_teams}} teams ({{how_share}} of the random sets were as low). So the gap of {{gap_points}} percentage points splits into two parts of about the same size, {{where_part_of_gap}} and {{how_part_of_gap}}, as I expected before the results.
 
-**More defenders between the ball and the goal: not supported.** Compared with the league's shots from the same places, the shots against Juventus did not have more defenders in the way (direct free kicks, with their wall, are left out). Juventus was {{defenders_rank}} of the {{n_teams}} teams, and {{defenders_share}} of the random sets had at least as many. Without the frames that show fewer than {{min_players_in_frame}} players, the result is the same ({{check_defenders_rank}}). So the how part is not explained by the number of defenders in the way. What it is made of, for example the pressure on the shooter, headers, or the goalkeeper's position, was not tested. On average, the nearest defender was {{nearest_defender_text}} than usual for the same places ({{nearest_defender_rank}} of the {{n_teams}} teams; shown, not judged).
+**More defenders between the ball and the goal: not supported.** Compared with the league's shots from the same places, the shots against Juventus did not have more defenders in the way (direct free kicks, with their wall, are left out). Juventus was {{defenders_rank}} of the {{n_teams}} teams, and {{defenders_share}} of the random sets had at least as many. Without the frames that show fewer than {{min_players_in_frame}} players, the result is the same ({{check_defenders_rank}}). So the how part is not explained by the number of defenders in the way. What it is made of is the third question, in [the next section](#two-levels-deeper-what-is-the-how-part-made-of). On average, the nearest defender was {{nearest_defender_text}} than usual for the same places ({{nearest_defender_rank}} of the {{n_teams}} teams; shown, not judged).
 
 ![From the league's xG per shot to Juventus's, in two steps: where and how](results/charts/4_where_how.png)
 
 All the results: [`results/where_how_tests.csv`](results/where_how_tests.csv) (the tests), [`results/where_how_teams.csv`](results/where_how_teams.csv) (every team) and [`results/where_how_zones.csv`](results/where_how_zones.csv) (the zones).
+
+## Two levels deeper: what is the how part made of?
+
+From the same places, the shots against Juventus were still less likely to go in. Why? A third set of rules was fixed and committed before any of these results was calculated: see [the third set of rules in PLAN.md](PLAN.md#6c-rules-of-the-third-question-fixed-on-2026-11-25-before-any-result-was-calculated) and commit [`418ebda`](https://github.com/takakuwa-mamada/juventus-defence-2015-16/commit/418ebda3e13924f26bfb24171e6dadc91530f408). They look at three kinds of shots that StatsBomb records for every shot:
+
+- headers;
+- shots under pressure: StatsBomb's mark that an opponent was pressing the shooter at that moment. It is not a measure of how much a team pressed;
+- the kind of the last pass before the shot: a corner, another set piece, a cross, a through ball, another pass, or no pass.
+
+First, a straight-line model of all the league's shots, comparing only shots in the same zone, gives how much each kind changes the xG of a shot on average. Then, for each kind, Juventus's part is that amount times how much more or less often their opponents had that kind of shot than the league's shots from the same places. What the three kinds do not explain is the rest. Each part was compared with the same {{n_random_sets}} random sets as in the section above.
+
+**Headers: not supported.** On average, a header is worth {{header_effect_points}} percentage points less than another shot from the same zone, with the same pressure and the same kind of last pass. But the shots against Juventus were headers only {{extra_header_points}} percentage points less often than the league's shots from the same places. So the header part is close to zero: {{header_part_points}} points ({{header_rank}} of the {{n_teams}} teams; {{header_share}} of the random sets were as low).
+
+**Under pressure: not supported.** On average, a shot under pressure is worth only {{pressure_effect_points}} percentage points less. The shots against Juventus were under pressure a little less often than the league's ({{extra_pressure_points}} percentage points less often). So this part is close to zero too: {{pressure_part_points}} points ({{pressure_rank}} of the {{n_teams}} teams; {{pressure_share}} of the random sets were as low).
+
+**The kind of the last pass: not supported.** {{last_pass_part_points}} points, the lowest of the {{n_teams}} teams, but {{last_pass_share}} of the random sets were as low. Most of it comes from fewer shots after a through ball, the kind of last pass that is worth the most (shown, not judged).
+
+**My expectation: not met.** Together, the three parts explain {{kinds_share}} of Juventus's how part. Before the results, I expected {{kinds_expected_pct}} or more. The rest is {{rest_points}} of the {{how_part_points}} points, the lowest of the {{n_teams}} teams (shown, not judged). So the how part is mostly something that these three kinds do not explain. Examples are the goalkeeper's position, the type of shot, or small differences of place inside a zone; this project does not test them. With one more column for headers under pressure (the check), every judgement is the same.
+
+![The how part of Juventus, split into headers, pressure, the last pass and the rest](results/charts/5_how_kinds.png)
+
+All the results: [`results/how_kinds_tests.csv`](results/how_kinds_tests.csv) (the tests), [`results/how_kinds_teams.csv`](results/how_kinds_teams.csv) (every team) and [`results/how_kinds_league.csv`](results/how_kinds_league.csv) (the league-wide model).
 
 ## The other two charts
 
@@ -55,7 +77,7 @@ All the results: [`results/where_how_tests.csv`](results/where_how_tests.csv) (t
 
 > Judge a defence by the quality of the chances it allows, not only by how many shots or goals it concedes.
 >
-> Before explaining a headline number, break it into its drivers: Juventus's record came from very few shots and the weakest chances in the league, and luck is not needed to explain it. One level deeper, the weak chances came about half from where the opponents shot and half from how.
+> Before explaining a headline number, break it into its drivers: Juventus's record came from very few shots and the weakest chances in the league, and luck is not needed to explain it. One level deeper, the weak chances came about half from where the opponents shot and half from how. Two levels deeper, the kinds of shots that I expected to explain most of the how part explain only {{kinds_share}} of it: test an explanation before you tell it.
 
 ## How the data was checked
 
@@ -71,7 +93,9 @@ Before any analysis, the data passed all {{n_checks}} checks below ([`results/da
 - **Possessions are counted, not timed.** Every possession counts once, however short. This is not the share of time on the ball.
 - **Event data only.** The data shows what happened on the ball. It shows where the other players were only when a shot was taken, and not always for every player.
 - **What "how" means.** The how part is everything that is not the place: the pressure on the shooter, the body part, the type of shot, the goalkeeper's position, and small differences of place inside a zone. So it is not only how well Juventus defended. StatsBomb's xG may already use some of the players' positions.
-- **{{n_new_tests}} more tests.** Each test of the second question was judged at {{supported_pct}}, so the chance that at least one of them is supported by luck alone can be up to {{any_new_test_pct}}. For the two supported parts, only {{where_share}} and {{how_share}} of the random sets were as low.
+- **{{n_new_tests}} more tests.** The {{n_tests_second}} tests of the second question and the {{n_tests_third}} of the third were each judged at {{supported_pct}}, so the chance that at least one of them is supported by luck alone can be up to {{any_new_test_pct}}. For the two supported parts, only {{where_share}} and {{how_share}} of the random sets were as low.
+- **Kinds, not quality.** The third question counts how often each kind of shot came, compared with the league's shots from the same places. It does not measure whether the shots of one kind were better or worse than usual: weaker headers than usual, for example, end up in the rest. The rest is what the three kinds do not explain, not a cause that was measured.
+- **A straight-line model.** It assumes that each kind changes xG by the same amount in every zone, whatever the other kinds are. League-wide, pressure lowers the xG of headers more than that of other shots. The check adds this joint effect and gives the same judgements.
 
 ## How to rerun
 
