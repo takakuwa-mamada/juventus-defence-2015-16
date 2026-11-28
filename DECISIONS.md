@@ -540,3 +540,33 @@ Choices made by the AI assistant, listed here for my review:
 - The text does not name decisions such as D36: a typed number in a template stops `src/05_report.py`. So the README says "before the results" instead, as in the section of the second question.
 - `src/05_report.py` stops if one of the facts that the new text states in words is no longer true: for example, if one of the three parts becomes supported, if my expectation is met, or if the through ball is no longer most of the last-pass part.
 - The room left at the bottom of each printed summary, measured as in D33: English about 3 mm (as before), Japanese about 1 mm (one more line).
+
+## D40 · 2026-11-28 · The Japanese one-page summary, rewritten with the answer first
+
+Decided after reading the Japanese summary again. No result changes, and the English summary and the charts stay as they are.
+
+Read again, the Japanese summary was hard to follow:
+- the answer came last: the order was question, hypothesis, results, and then the conclusion;
+- some words were translated word for word from English, or made up ("許したチャンス", the chances allowed; "場所と状況", where and how; "一段深く", one level deeper);
+- the labels got in the way: Juventus allowed the 2nd fewest shots of the 20 teams, but the label "not supported" made this look like a bad result;
+- the conclusion ended with a general rule, not with what was found.
+
+**Options**
+- A. rewrite the Japanese summary: the answer first, then the evidence, how it was checked, and the limits, in plain Japanese. The English summary and the charts stay as they are.
+- B. rewrite both summaries in this order.
+- C. fix only the words of the Japanese summary, and keep its order and labels.
+
+**Choice:** A.
+
+**Reason:** The main problem was the order, not only the words: a reader had to reach the end to find the answer, so C would not fix it. The English summary reads naturally, and the README already starts with a short answer, so B would take about twice the time for little gain. The cost of A: the two summaries no longer have the same order, and the Japanese one is no longer a translation of the English one.
+
+Choices made by the AI assistant, listed here for my review:
+- The AI assistant drafted the text, and I read the whole draft before it went into `templates/`.
+- Each point of the list starts with a short sentence in bold that says what was found, so that the bold sentences alone tell the story.
+- The hypothesis that failed ("the fewest shots": Juventus was 2nd) is now said under "how it was checked", not as a label.
+- The Japanese text calls an opponent's possession an "attack" (攻撃), the usual plain word. The README says "possessions".
+- To fit on one page, the note on xG is one line: it no longer says that xG is calculated from many past shots from similar places and situations. The limits still say that xG is the value of StatsBomb's model.
+- The line on who did what says the same as before (D7), in plainer words: the AI (Claude Code) wrote the code, and I decided the question, the hypothesis, the data checks, the choice of charts and the reading of the results.
+- Three new values in `src/05_report.py`, so that the Japanese text can say shares in plain words: the name of the team with the second fewest goals in Japanese; "about once in N times" for the replays (1 ÷ the share, rounded; it stops if N would be under 2); and "about once in 1000 times" said once for both shares of the random sets of the second question (each share × 1000, rounded; it stops if the two are not the same number from 1 to 9).
+- `src/05_report.py` stops if a fact that the new text states in words is no longer true: the team with the fewest shots is under 0.5 shots a match from Juventus; counted per 100 opponent possessions, Juventus drops to a lower place on shots; Juventus has the lowest xG conceded per 100 opponent possessions too; Juventus's opponents had the ball fewer times a match than the league average; and the where part and the how part are each 40% to 60% of the gap ("about half").
+- The room left at the bottom of each printed summary, measured as in D33: English about 3 mm (as before), Japanese about 4 mm (about 1 mm before).

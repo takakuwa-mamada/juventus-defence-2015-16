@@ -90,12 +90,26 @@ def check_results(table: pd.DataFrame, tests: pd.DataFrame, checks: pd.DataFrame
     juve = table.loc[TEAM]
     goals_all = all_goals_conceded(table)
     fewest = table.loc[fewest_shots_team(table)]
+    possessions_per_match = table["opponent_possessions"] / table["matches"]
     facts = {
         "Juventus conceded the fewest goals, with no tie": goals_all[TEAM] < goals_all.drop(TEAM).min(),
         "Juventus allowed almost the fewest shots (2nd)": juve["rank_shots_conceded_per_match"] == 2,
         "the team with the fewest shots allowed better chances": fewest["xg_per_shot_conceded"] > juve["xg_per_shot_conceded"],
         "Juventus had the lowest xG conceded per match": juve["rank_xg_conceded_per_match"] == 1,
         "Juventus conceded fewer goals than xG": juve["goals_minus_xg"] < 0,
+        # The Japanese summary also says these in words (D40).
+        "the team with the fewest shots faced almost as many as Juventus (under 0.5 a match apart)": (
+            abs(fewest["shots_conceded_per_match"] - juve["shots_conceded_per_match"]) < 0.5
+        ),
+        "counted per 100 opponent possessions, Juventus drops to a lower place on shots": (
+            juve["rank_shots_conceded_per_100_possessions"] > juve["rank_shots_conceded_per_match"]
+        ),
+        "Juventus had the lowest xG conceded per 100 opponent possessions too": (
+            juve["rank_xg_conceded_per_100_possessions"] == 1
+        ),
+        "Juventus's opponents had the ball fewer times a match than the league average": (
+            possessions_per_match[TEAM] < table["opponent_possessions"].sum() / table["matches"].sum()
+        ),
     }
     for fact, holds in facts.items():
         if not holds:
@@ -118,6 +132,10 @@ def check_where_how(tests: pd.DataFrame) -> None:
         "Juventus did not have more defenders in the way than usual": part.loc["defenders in the way", "value"] <= 0,
         "the check gave the same judgement": "the same judgement" in part.loc["defenders in the way (check)", "result"],
         "the nearest defender was closer than usual": part.loc["nearest defender", "value"] < 0,
+        # The Japanese summary says "half" each (D40).
+        "the where part and the how part are each about half of the gap (40% to 60%)": all(
+            0.4 <= part.loc[name, "value"] / part.loc["gap", "value"] <= 0.6 for name in ("where", "how")
+        ),
     }
     for fact, holds in facts.items():
         if not holds:
@@ -215,6 +233,7 @@ def values_for_text(table, tests, replays, checks, manifest) -> dict[str, str]:
         # All goals conceded.
         "juve_goals_total": str(int(goals_all[TEAM])),
         "second_goals_team": second,
+        "second_goals_team_ja": JAPANESE_NAMES.get(second, second),
         "second_goals_total": str(int(goals_all[second])),
         # How many chances (measure 1).
         "juve_shots_per_match": f"{juve['shots_conceded_per_match']:.1f}",
@@ -237,6 +256,7 @@ def values_for_text(table, tests, replays, checks, manifest) -> dict[str, str]:
         "n_replays": f"{n_replays:,}",
         "n_replays_ja": japanese_count(n_replays),
         "replay_share": f"{replay_share['goals about what xG predicted']:.1%}",
+        "replay_one_in_text": one_in_text(replay_share["goals about what xG predicted"]),
         "replay_share_with_penalties": f"{replay_share['goals about what xG predicted (check with penalties)']:.1%}",
         "far_fewer_pct": f"{FAR_FEWER_SHARE:.0%}",
         "far_fewer_max_goals": str(far_fewer_limit(replays)),
@@ -270,6 +290,9 @@ def where_how_values(teams: pd.DataFrame, tests: pd.DataFrame) -> dict[str, str]
         "how_part_of_gap": f"{1 - where_part_of_gap:.0%}",
         "where_share": f"{part.loc['where', 'share_of_random_sets']:.2%}",
         "how_share": f"{part.loc['how', 'share_of_random_sets']:.2%}",
+        "where_how_chance_text": per_1000_text(
+            part.loc["where", "share_of_random_sets"], part.loc["how", "share_of_random_sets"]
+        ),
         # The defenders in the way, and the nearest defender (shown, not judged).
         "defenders_rank": ordinal(int(part.loc["defenders in the way", "rank_of_20"])),
         "defenders_rank_n": str(int(part.loc["defenders in the way", "rank_of_20"])),
@@ -413,6 +436,25 @@ def count(n: int, word: str) -> str:
 def japanese_count(n: int) -> str:
     """10000 -> "1 万" (Japanese counts large numbers in units of 10,000)."""
     return f"{n // 10_000} 万" if n % 10_000 == 0 else f"{n:,}"
+
+
+def one_in_text(share: float) -> str:
+    """0.246 -> "4 回に 1 回" ("once in 4 times"): a share in plain Japanese, as the Japanese summary says it.
+    Stops if it would be "once in 1 time", where the words no longer fit."""
+    n = round(1 / share)
+    if n < 2:
+        sys.exit(f"The Japanese summary says 'once in N times' for a share of {share:.1%}, but N is {n}. Rewrite the text.")
+    return f"{n} 回に 1 回"
+
+
+def per_1000_text(*shares: float) -> str:
+    """0.0011 and 0.0010 -> "1000 回に 1 回" ("once in 1000 times"): shares said once for all of them, in plain
+    Japanese. Stops if they no longer round to the same number, or it is not 1 to 9 (the words would not fit)."""
+    n = {round(1000 * share) for share in shares}
+    if len(n) != 1 or not 1 <= min(n) <= 9:
+        sys.exit(f"The Japanese summary says 'N times in 1000' for the shares {', '.join(f'{s:.2%}' for s in shares)}, "
+                 f"but they round to {sorted(n)}. Rewrite the text.")
+    return f"1000 回に {n.pop()} 回"
 
 
 def read(name: str) -> pd.DataFrame:
